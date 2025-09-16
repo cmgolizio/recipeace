@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { auth } from "@/lib/firebase";
 import {
   GoogleAuthProvider,
   signInWithPopup,
@@ -11,6 +10,9 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 import { useRouter } from "next/navigation";
+
+import { auth } from "@/lib/firebase";
+// import { ThemeProvider } from "@/contexts/ThemeContext";
 
 export default function Home() {
   const [email, setEmail] = useState("");
@@ -65,7 +67,7 @@ export default function Home() {
 
   return (
     <div className='flex flex-col items-center justify-center min-h-screen bg-(#161611) p-6'>
-      <h1 className='text-3xl font-bold mb-6'>RecipeAce</h1>
+      <h1 className='text-3xl font-bold mb-6'>ReciPeace</h1>
 
       {!user ? (
         <div className='w-full max-w-sm bg-(#161611) p-6 rounded-lg shadow'>

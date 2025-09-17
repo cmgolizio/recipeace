@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import axios from "axios";
 
 export default function RecipeCard({
@@ -7,6 +10,16 @@ export default function RecipeCard({
   isFavorited,
   // fetchRecipeSourceUrl,
 }) {
+  const [tooltipVisible, setTooltipVisible] = useState(false);
+
+  const handleMouseEnter = () => {
+    setTooltipVisible(true);
+  };
+
+  const handleMouseLeave = () => {
+    setTooltipVisible(false);
+  };
+
   const fetchRecipeSourceUrl = async (recipeId) => {
     try {
       const res = await axios.get("/api/spoonacular/recipe-source", {
@@ -33,10 +46,31 @@ export default function RecipeCard({
         className='w-full h-40 object-cover rounded'
       />
       <h2 className='text-lg font-semibold mt-2'>{recipe.title}</h2>
-      <p className='text-sm text-gray-600'>
+      {/* <p className='text-sm text-gray-600'>
         ✅ Uses {recipe.usedIngredientCount} pantry items <br />❌ Missing{" "}
         {recipe.missedIngredientCount} items
+      </p> */}
+      <p className='text-sm text-gray-600'>
+        ✅ Uses {recipe.usedIngredientCount} pantry items
       </p>
+      <span
+        className={`cursor-pointer ${tooltipVisible ? "text-blue-600" : ""}`}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        <p className='text-sm text-gray-600'>
+          ❌ Missing {recipe.missedIngredientCount} items
+        </p>
+      </span>
+      {tooltipVisible && (
+        <div className='absolute z-10 bg-white border rounded p-2 mt-1 text-sm text-gray-800 shadow-lg w-64'>
+          <ul className='text-sm'>
+            {recipe?.missedIngredients.map((ing) => (
+              <li key={ing.id}>- {ing.name}</li>
+            ))}
+          </ul>
+        </div>
+      )}
       {/* <a
         href={`https://spoonacular.com/recipes/${recipe.title
           .toLowerCase()

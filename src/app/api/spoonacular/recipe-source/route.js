@@ -3,7 +3,7 @@ import axios from "axios";
 
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
-  const recipeId = searchParams.get("recipe-id"); // comma-separated
+  const recipeId = searchParams.get("recipe-id");
 
   if (!recipeId) {
     return NextResponse.json({ error: "Missing recipe ID" }, { status: 400 });
@@ -13,7 +13,7 @@ export async function GET(req) {
     method: "GET",
     url: `https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/${recipeId}/information`,
     headers: {
-      "x-rapidapi-key": "44f52865abmsh32125aabc042ff8p1673f1jsne72bd855049f",
+      "x-rapidapi-key": process.env.NEXT_PUBLIC_RAPID_API_KEY,
       "x-rapidapi-host": "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com",
     },
   };

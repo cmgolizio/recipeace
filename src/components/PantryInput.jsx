@@ -97,7 +97,7 @@ export default function PantryInput({ onAdd }) {
       />
 
       {addedMessage && (
-        <p className='absolute top-full left-0 mt-1 text-md text-green-500'>
+        <p className='absolute top-full right-0 mt-1 text-md text-green-500'>
           {addedMessage}
         </p>
       )}

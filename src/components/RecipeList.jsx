@@ -100,7 +100,7 @@ export default function RecipeList({ pantry }) {
   };
 
   return (
-    <div className='mt-6'>
+    <div className='w-full h-full mt-6'>
       <div className='flex items-center gap-3'>
         <button
           onClick={fetchRecipes}

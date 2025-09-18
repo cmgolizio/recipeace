@@ -1,5 +1,8 @@
 "use client";
 
+import { SlHeart } from "react-icons/sl";
+import Link from "next/link";
+
 import "./globals.css";
 import AuthButton from "@/components/AuthButton";
 import { usePathname } from "next/navigation";
@@ -15,8 +18,13 @@ export default function RootLayout({ children }) {
         <body className='bg-(#161611) min-h-screen flex flex-col'>
           {/* Navbar */}
           <header className='bg-(#0b0b0a) shadow p-4 flex justify-between items-center'>
-            <h1 className='text-xl font-bold'>ReciPeace</h1>
+            <Link href='/'>
+              <h1 className='text-xl font-bold'>ReciPeace</h1>
+            </Link>
             <ThemeToggle />
+            <Link href='/favorites' className='text-2xl'>
+              <SlHeart />
+            </Link>
             {pathname !== "/login" && <AuthButton />}
           </header>
 

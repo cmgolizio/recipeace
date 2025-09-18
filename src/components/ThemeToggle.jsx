@@ -5,31 +5,6 @@ import { useTheme } from "@/contexts/ThemeContext";
 export default function ThemeToggle() {
   const { theme, toggleTheme } = useTheme();
 
-  // const [theme, setTheme] = useState("light");
-
-  // // On mount, check for stored theme or system preference
-  // useEffect(() => {
-  //   const storedTheme = localStorage.getItem("theme");
-  //   if (storedTheme) {
-  //     setTheme(storedTheme);
-  //     document.documentElement.setAttribute("data-theme", storedTheme);
-  //   } else {
-  //     const prefersDark = window.matchMedia(
-  //       "(prefers-color-scheme: dark)"
-  //     ).matches;
-  //     const initialTheme = prefersDark ? "dark" : "light";
-  //     setTheme(initialTheme);
-  //     document.documentElement.setAttribute("data-theme", initialTheme);
-  //   }
-  // }, []);
-
-  // const toggleTheme = () => {
-  //   const newTheme = theme === "light" ? "dark" : "light";
-  //   setTheme(newTheme);
-  //   document.documentElement.setAttribute("data-theme", newTheme);
-  //   localStorage.setItem("theme", newTheme);
-  // };
-
   return (
     <button
       onClick={toggleTheme}

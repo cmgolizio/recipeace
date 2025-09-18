@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 import axios from "axios";
+import { SlHeart } from "react-icons/sl";
+import { ImHeart } from "react-icons/im";
 
 export default function RecipeCard({
   recipe,
   user,
   toggleFavorite,
   isFavorited,
-  // fetchRecipeSourceUrl,
 }) {
   const [tooltipVisible, setTooltipVisible] = useState(false);
 
@@ -26,7 +27,6 @@ export default function RecipeCard({
         params: { "recipe-id": recipeId },
       });
       if (res.data && res.data.sourceUrl) {
-        // setRecipeSourceUrl(res.data.sourceUrl);
         window.open(res.data.sourceUrl, "_blank");
         console.log("Recipe source URL:", res.data.sourceUrl);
       } else {
@@ -39,17 +39,13 @@ export default function RecipeCard({
     }
   };
   return (
-    <div className='h-full border rounded-lg p-4 shadow hover:shadow-lg transition hover:cursor-pointer'>
+    <div className='border rounded-lg p-4 shadow hover:shadow-lg transition flex flex-col text-center'>
       <img
         src={recipe.image}
         alt={recipe.title}
         className='w-full h-40 object-cover rounded'
       />
       <h2 className='text-lg font-semibold mt-2'>{recipe.title}</h2>
-      {/* <p className='text-sm text-gray-600'>
-        ✅ Uses {recipe.usedIngredientCount} pantry items <br />❌ Missing{" "}
-        {recipe.missedIngredientCount} items
-      </p> */}
       <p className='text-sm text-gray-600'>
         ✅ Uses {recipe.usedIngredientCount} pantry items
       </p>
@@ -71,16 +67,6 @@ export default function RecipeCard({
           </ul>
         </div>
       )}
-      {/* <a
-        href={`https://spoonacular.com/recipes/${recipe.title
-          .toLowerCase()
-          .replace(/ /g, "-")}-${recipe.id}`}
-        target='_blank'
-        rel='noopener noreferrer'
-        className='text-blue-600 hover:underline mt-2 block'
-      >
-        View Recipe
-      </a> */}
       <button
         className='text-blue-600 hover:underline mt-2 block hover:cursor-pointer'
         onClick={() => fetchRecipeSourceUrl(recipe.id)}
@@ -90,7 +76,24 @@ export default function RecipeCard({
       {user && (
         <button
           onClick={() => toggleFavorite(recipe)}
-          className={`mt-2 px-2 py-1 rounded text-sm ${
+          className='hover:cursor-pointer mt-2 px-2 py-2'
+        >
+          {isFavorited(recipe.id) ? (
+            <ImHeart style={{ color: "red" }} />
+          ) : (
+            <SlHeart />
+          )}
+        </button>
+      )}
+    </div>
+  );
+}
+
+{
+  /* {user && (
+        <button
+          onClick={() => toggleFavorite(recipe)}
+          className={`absolute bottom-0 left-0 mt-2 px-2 py-2 rounded text-sm ${
             isFavorited(recipe.id)
               ? "bg-red-500 text-white"
               : "bg-gray-200 text-gray-800 hover:bg-gray-300"
@@ -100,7 +103,5 @@ export default function RecipeCard({
             ? "Remove from Favorites"
             : "Add to Favorites"}
         </button>
-      )}
-    </div>
-  );
+      )} */
 }

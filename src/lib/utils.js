@@ -39,7 +39,7 @@ export async function toggleFavorite(user, favorites, recipe) {
   } else {
     // Add favorite
     await addDoc(favoritesRef, {
-      recipeId: recipe.id,
+      recipeId: recipeId,
       title: recipe.title,
       image: recipe.image,
     });

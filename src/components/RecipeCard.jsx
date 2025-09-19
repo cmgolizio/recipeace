@@ -31,7 +31,7 @@ export default function RecipeCard({
         alt={recipe.title}
         className='w-full h-40 object-cover rounded'
       />
-      <Link href={`/recipe/${recipe.id}`}>
+      <Link href={`/recipe/${recipe.recipeId}`}>
         <h2 className='text-lg font-semibold mt-2 hover:underline'>
           {recipe.title}
         </h2>
@@ -51,9 +51,13 @@ export default function RecipeCard({
       {tooltipVisible && (
         <div className='absolute z-10 bg-white border rounded p-2 mt-1 text-sm text-gray-800 shadow-lg w-64'>
           <ul className='text-sm'>
-            {recipe?.missedIngredients.map((ing) => (
-              <li key={ing.id}>- {ing.name}</li>
-            ))}
+            {recipe?.missedIngredients?.length > 0 ? (
+              recipe.missedIngredients.map((ing) => (
+                <li key={ing.id}>- {ing.name}</li>
+              ))
+            ) : (
+              <li className='text-gray-500'>No missing ingredients info.</li>
+            )}
           </ul>
         </div>
       )}

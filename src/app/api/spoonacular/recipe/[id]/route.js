@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import axios from "axios";
 
-export async function GET(request, { params }) {
-  const { id } = params;
+export async function GET(request, context) {
+  const { id } = await context.params;
 
   if (!id) {
     return NextResponse.json({ error: "Missing recipe ID" }, { status: 400 });

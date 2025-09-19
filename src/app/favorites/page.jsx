@@ -6,6 +6,7 @@ import { collection, onSnapshot, deleteDoc, doc } from "firebase/firestore";
 
 import { db, auth } from "@/lib/firebase";
 import { fetchRecipeSourceUrl, removeFavorite } from "@/lib/utils";
+import RecipeCard from "@/components/RecipeCard";
 
 export default function FavoritesPage() {
   const [user] = useAuthState(auth);
@@ -43,33 +44,39 @@ export default function FavoritesPage() {
         ) : (
           <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-3'>
             {favorites.map((recipe) => (
-              <div
+              <RecipeCard
                 key={recipe.id}
-                className='bg-gray-100 dark:bg-gray-800 rounded-lg p-4 shadow'
-              >
-                {recipe.image && (
-                  <img
-                    src={recipe.image}
-                    alt={recipe.title}
-                    className='w-full h-40 object-cover rounded'
-                  />
-                )}
-                <h2 className='mt-2 text-lg font-semibold'>{recipe.title}</h2>
-                <div className='flex justify-between items-center mt-2'>
-                  <button
-                    className='text-blue-600 hover:underline mt-2 block hover:cursor-pointer'
-                    onClick={() => fetchRecipeSourceUrl(recipe.id)}
-                  >
-                    View Recipe
-                  </button>
-                  <button
-                    onClick={() => removeFavorite(user, recipe.id)}
-                    className='text-red-500 text-sm hover:underline'
-                  >
-                    Remove
-                  </button>
-                </div>
-              </div>
+                recipe={recipe}
+                user={user}
+                favorites={favorites}
+              />
+              // <div
+              //   key={recipe.id}
+              //   className='bg-gray-100 dark:bg-gray-800 rounded-lg p-4 shadow'
+              // >
+              //   {recipe.image && (
+              //     <img
+              //       src={recipe.image}
+              //       alt={recipe.title}
+              //       className='w-full h-40 object-cover rounded'
+              //     />
+              //   )}
+              //   <h2 className='mt-2 text-lg font-semibold'>{recipe.title}</h2>
+              //   <div className='flex justify-between items-center mt-2'>
+              //     <button
+              //       className='text-blue-600 hover:underline mt-2 block hover:cursor-pointer'
+              //       onClick={() => fetchRecipeSourceUrl(recipe.id)}
+              //     >
+              //       View Recipe
+              //     </button>
+              //     <button
+              //       onClick={() => removeFavorite(user, recipe.id)}
+              //       className='text-red-500 text-sm hover:underline'
+              //     >
+              //       Remove
+              //     </button>
+              //   </div>
+              // </div>
             ))}
           </div>
         )}

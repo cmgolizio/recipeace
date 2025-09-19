@@ -49,7 +49,7 @@ export default function RecipeDetailPage() {
 
     const checkFavorite = async () => {
       const favRef = collection(db, "users", user.uid, "favorites");
-      const q = query(favRef, where("spoonacularId", "==", id));
+      const q = query(favRef, where("recipeId", "==", id));
       const snapshot = await getDocs(q);
 
       if (!snapshot.empty) {
@@ -69,7 +69,7 @@ export default function RecipeDetailPage() {
     try {
       const favRef = collection(db, "users", user.uid, "favorites");
       const docRef = await addDoc(favRef, {
-        spoonacularId: id,
+        recipeId: id,
         title: recipe.title,
         image: recipe.image,
         sourceUrl: recipe.sourceUrl,
@@ -110,23 +110,10 @@ export default function RecipeDetailPage() {
             className='w-full h-64 object-cover rounded-lg'
           />
         )}
-
+        <h1 className='text-3xl font-bold'>{recipe.title}</h1>
         <div className='flex justify-between items-center'>
           <h2 className='text-lg font-semibold'>Ingredients</h2>
           {isFavorite ? (
-            //   <button
-            //     onClick={removeFavorite}
-            //     className='text-red-500 hover:underline text-sm'
-            //   >
-            //     ★ Remove Favorite
-            //   </button>
-            // ) : (
-            //   <button
-            //     onClick={addFavorite}
-            //     className='text-blue-500 hover:underline text-sm'
-            //   >
-            //     ☆ Add to Favorites
-            //   </button>
             <button
               onClick={removeFavorite}
               className='text-red-500 hover:underline text-sm'

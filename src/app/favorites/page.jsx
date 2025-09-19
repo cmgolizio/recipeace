@@ -5,6 +5,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { collection, onSnapshot, deleteDoc, doc } from "firebase/firestore";
 
 import { db, auth } from "@/lib/firebase";
+import { fetchRecipeSourceUrl, removeFavorite } from "@/lib/utils";
 
 export default function FavoritesPage() {
   const [user] = useAuthState(auth);
@@ -27,10 +28,10 @@ export default function FavoritesPage() {
   }, [user]);
 
   // Remove a favorite
-  const removeFavorite = async (id) => {
-    if (!user || !id) return;
-    await deleteDoc(doc(db, "users", user.uid, "favorites", id));
-  };
+  // const removeFavorite = async (id) => {
+  //   if (!user || !id) return;
+  //   await deleteDoc(doc(db, "users", user.uid, "favorites", id));
+  // };
 
   return (
     <div className='min-h-screen bg-[var(--color-bg)] text-[var(--color-text)]'>
@@ -55,16 +56,14 @@ export default function FavoritesPage() {
                 )}
                 <h2 className='mt-2 text-lg font-semibold'>{recipe.title}</h2>
                 <div className='flex justify-between items-center mt-2'>
-                  <a
-                    href={recipe.sourceUrl}
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    className='text-blue-500 hover:underline text-sm'
+                  <button
+                    className='text-blue-600 hover:underline mt-2 block hover:cursor-pointer'
+                    onClick={() => fetchRecipeSourceUrl(recipe.id)}
                   >
                     View Recipe
-                  </a>
+                  </button>
                   <button
-                    onClick={() => removeFavorite(recipe.id)}
+                    onClick={() => removeFavorite(user, recipe.id)}
                     className='text-red-500 text-sm hover:underline'
                   >
                     Remove

@@ -13,6 +13,7 @@ import {
 } from "firebase/firestore";
 
 import { auth, db } from "@/lib/firebase";
+import { isFavorited, toggleFavorite } from "@/lib/utils";
 import RecipeCard from "./RecipeCard";
 
 export default function RecipeList({ pantry }) {
@@ -76,28 +77,28 @@ export default function RecipeList({ pantry }) {
     return () => unsubscribe();
   }, [user]);
 
-  const isFavorited = (recipeId) => {
-    return favorites.some((fav) => fav.recipeId === recipeId);
-  };
+  // const isFavorited = (recipeId) => {
+  //   return favorites.some((fav) => fav.recipeId === recipeId);
+  // };
 
-  const toggleFavorite = async (recipe) => {
-    if (!user) return;
+  // const toggleFavorite = async (recipe) => {
+  //   if (!user) return;
 
-    const favoritesRef = collection(db, "users", user.uid, "favorites");
+  //   const favoritesRef = collection(db, "users", user.uid, "favorites");
 
-    if (isFavorited(recipe.id)) {
-      // Remove favorite
-      const favDoc = favorites.find((fav) => fav.recipeId === recipe.id);
-      await deleteDoc(doc(db, "users", user.uid, "favorites", favDoc.id));
-    } else {
-      // Add favorite
-      await addDoc(favoritesRef, {
-        recipeId: recipe.id,
-        title: recipe.title,
-        image: recipe.image,
-      });
-    }
-  };
+  //   if (isFavorited(recipe.id)) {
+  //     // Remove favorite
+  //     const favDoc = favorites.find((fav) => fav.recipeId === recipe.id);
+  //     await deleteDoc(doc(db, "users", user.uid, "favorites", favDoc.id));
+  //   } else {
+  //     // Add favorite
+  //     await addDoc(favoritesRef, {
+  //       recipeId: recipe.id,
+  //       title: recipe.title,
+  //       image: recipe.image,
+  //     });
+  //   }
+  // };
 
   return (
     <div className='w-full h-full mt-6'>
@@ -145,8 +146,9 @@ export default function RecipeList({ pantry }) {
               key={recipe.id * i}
               recipe={recipe}
               user={user}
-              toggleFavorite={toggleFavorite}
-              isFavorited={isFavorited}
+              favorites={favorites}
+              // toggleFavorite={toggleFavorite}
+              // isFavorited={isFavorited}
               // fetchRecipeSourceUrl={fetchRecipeSourceUrl}
             />
           ))}

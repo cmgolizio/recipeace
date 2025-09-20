@@ -132,7 +132,7 @@ export default function RecipeDetailPage() {
 
         <ul className='list-disc pl-6 space-y-1'>
           {recipe.extendedIngredients?.map((ing) => (
-            <li key={ing.id}>{ing.original}</li>
+            <li key={Math.floor(ing.id * Math.random())}>{ing.original}</li>
           ))}
         </ul>
 

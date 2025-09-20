@@ -45,7 +45,7 @@ export default function FavoritesPage() {
           <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-3'>
             {favorites.map((recipe) => (
               <RecipeCard
-                key={recipe.id}
+                key={Math.floor(recipe.id * Math.random())}
                 recipe={recipe}
                 user={user}
                 favorites={favorites}

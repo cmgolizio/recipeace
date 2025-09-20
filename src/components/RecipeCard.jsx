@@ -31,7 +31,7 @@ export default function RecipeCard({
         alt={recipe.title}
         className='w-full h-40 object-cover rounded'
       />
-      <Link href={`/recipe/${recipe.recipeId}`}>
+      <Link href={`/recipe/${recipe.id}`}>
         <h2 className='text-lg font-semibold mt-2 hover:underline'>
           {recipe.title}
         </h2>

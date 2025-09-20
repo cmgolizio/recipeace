@@ -3,10 +3,10 @@ import { addDoc, collection, deleteDoc, doc } from "firebase/firestore";
 
 import { db } from "./firebase";
 
-export async function fetchRecipeSourceUrl(recipeId) {
+export async function fetchRecipeSourceUrl(id) {
   try {
     const res = await axios.get("/api/spoonacular/recipe-source", {
-      params: { "recipe-id": recipeId },
+      params: { id: id },
     });
     if (res.data && res.data.sourceUrl) {
       window.open(res.data.sourceUrl, "_blank");
@@ -21,10 +21,10 @@ export async function fetchRecipeSourceUrl(recipeId) {
   }
 }
 
-export function isFavorited(favorites, recipeId) {
+export function isFavorited(favorites, id) {
   if (!Array.isArray(favorites)) return false;
 
-  return favorites.some((fav) => fav.recipeId === recipeId);
+  return favorites.some((fav) => fav.id === id);
 }
 
 export async function toggleFavorite(user, favorites, recipe) {
@@ -34,19 +34,19 @@ export async function toggleFavorite(user, favorites, recipe) {
 
   if (isFavorited(favorites, recipe.id)) {
     // Remove favorite
-    const favDoc = favorites.find((fav) => fav.recipeId === recipe.id);
+    const favDoc = favorites.find((fav) => fav.id === recipe.id);
     await deleteDoc(doc(db, "users", user.uid, "favorites", favDoc.id));
   } else {
     // Add favorite
     await addDoc(favoritesRef, {
-      recipeId: recipeId,
+      id: recipe.id,
       title: recipe.title,
       image: recipe.image,
     });
   }
 }
 
-export async function removeFavorite(user, recipeId) {
-  if (!user || !recipeId) return;
-  await deleteDoc(doc(db, "users", user.uid, "favorites", recipeId));
+export async function removeFavorite(user, id) {
+  if (!user || !id) return;
+  await deleteDoc(doc(db, "users", user.uid, "favorites", id));
 }

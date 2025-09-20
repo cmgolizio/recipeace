@@ -128,7 +128,7 @@ export default function RecipeList({ pantry }) {
         <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-6 animate-pulse'>
           {[...Array(6)].map((_, idx) => (
             <div
-              key={idx}
+              key={idx * Math.random()}
               className='p-4 border rounded-lg shadow bg-gray-100 h-56'
             >
               <div className='w-full h-32 bg-gray-300 rounded-md'></div>
@@ -143,7 +143,7 @@ export default function RecipeList({ pantry }) {
         <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-6'>
           {recipes.map((recipe, i) => (
             <RecipeCard
-              key={recipe.id * i}
+              key={Math.floor(recipe.id * Math.random())}
               recipe={recipe}
               user={user}
               favorites={favorites}

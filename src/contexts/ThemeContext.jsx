@@ -5,17 +5,6 @@ import React, { createContext, useState, useEffect, useContext } from "react";
 const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
-  // const [theme, setTheme] = useState(() => {
-  //   const storedTheme = localStorage.getItem("theme");
-  //   if (storedTheme) {
-  //     return storedTheme;
-  //   } else {
-  //     const prefersDark = window.matchMedia(
-  //       "(prefers-color-scheme: dark)"
-  //     ).matches;
-  //     return prefersDark ? "dark" : "light";
-  //   }
-  // });
   const [theme, setTheme] = useState("light");
 
   // On mount, check for stored theme or system preference
@@ -40,6 +29,13 @@ export const ThemeProvider = ({ children }) => {
     document.documentElement.setAttribute("data-theme", newTheme);
     localStorage.setItem("theme", newTheme);
   };
+
+  // const toggleTheme = () => {
+  //   const newTheme = theme === "light" ? "dark" : "light";
+  //   setTheme(newTheme);
+  //   localStorage.setItem("theme", newTheme);
+  //   document.documentElement.classList.toggle("dark", newTheme === "dark");
+  // };
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);

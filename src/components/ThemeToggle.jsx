@@ -1,49 +1,59 @@
 "use client";
 
+// import { useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { FaRegSun } from "react-icons/fa";
+import { FaSun } from "react-icons/fa6";
+import { FaRegMoon } from "react-icons/fa";
+import { FaMoon } from "react-icons/fa";
+
 import { useTheme } from "@/contexts/ThemeContext";
 
 export default function ThemeToggle() {
   const { theme, toggleTheme } = useTheme();
 
+  // useEffect(() => {
+  //   // Load saved preference
+  //   const saved = localStorage.getItem("data-theme") || "light";
+  //   setTheme(saved);
+  //   document.documentElement.classList.toggle("dark", saved === "dark");
+  // }, []);
+
   return (
     <button
       onClick={toggleTheme}
-      className='p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition'
+      className='p-2 rounded-full transition'
       aria-label='Toggle Theme'
     >
-      {theme === "light" ? (
-        // Moon SVG for dark mode
-        <svg
-          xmlns='http://www.w3.org/2000/svg'
-          fill='none'
-          viewBox='0 0 24 24'
-          strokeWidth={2}
-          stroke='currentColor'
-          className='w-6 h-6'
-        >
-          <path
-            strokeLinecap='round'
-            strokeLinejoin='round'
-            d='M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z'
-          />
-        </svg>
-      ) : (
-        // Sun SVG for light mode
-        <svg
-          xmlns='http://www.w3.org/2000/svg'
-          fill='none'
-          viewBox='0 0 24 24'
-          strokeWidth={2}
-          stroke='currentColor'
-          className='w-6 h-6'
-        >
-          <path
-            strokeLinecap='round'
-            strokeLinejoin='round'
-            d='M12 3v2m0 14v2m9-9h-2M5 12H3m15.364-6.364l-1.414 1.414M6.05 17.95l-1.414 1.414M17.95 17.95l-1.414-1.414M6.05 6.05L4.636 7.464M12 8a4 4 0 100 8 4 4 0 000-8z'
-          />
-        </svg>
-      )}
+      <AnimatePresence mode='wait' initial={false}>
+        {theme === "light" ? (
+          <motion.div
+            key='moon'
+            initial={{ rotate: 90, opacity: 0 }}
+            animate={{ rotate: 0, opacity: 1 }}
+            exit={{ rotate: -90, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <FaMoon
+              className='w-6 h-6 hover:w-7 hover:h-7'
+              style={{ color: "#f2f2f2" }}
+            />
+          </motion.div>
+        ) : (
+          <motion.div
+            key='sun'
+            initial={{ rotate: -90, opacity: 0 }}
+            animate={{ rotate: 0, opacity: 1 }}
+            exit={{ rotate: 90, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <FaSun
+              className='w-6 h-6 hover:w-7 hover:h-7'
+              style={{ color: "#f2f2f2" }}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </button>
   );
 }

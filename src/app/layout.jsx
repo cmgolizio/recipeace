@@ -21,11 +21,11 @@ export default function RootLayout({ children }) {
             <Link href='/'>
               <h1 className='text-xl font-bold'>ReciPeace</h1>
             </Link>
-            <Link href='/dashboard' className='text-2xl'>
+            <Link href='/food' className='text-2xl'>
               Pantry
             </Link>
             <ThemeToggle />
-            <Link href='/favorites' className='text-2xl'>
+            <Link href='/food/favorites' className='text-2xl'>
               Saved
             </Link> */}
           {/* {pathname !== "/login" && <AuthButton />} */}

@@ -16,7 +16,7 @@ export async function GET(req) {
     params: {
       ingredients: ingredients,
       number: "6",
-      // ignorePantry: "true",
+      ignorePantry: "true",
       ranking: strict ? 2 : 1,
     },
     headers: {

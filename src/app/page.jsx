@@ -24,7 +24,7 @@ export default function Home() {
     const unsubscribe = onAuthStateChanged(auth, (u) => {
       if (u) {
         setUser(u);
-        router.push("/dashboard");
+        router.push("/food");
       } else {
         setUser(null);
       }

@@ -13,6 +13,8 @@ export default function Navbar() {
     setOpenMenu(openMenu === menu ? null : menu);
   };
 
+  const closeAll = () => setOpenMenu(null);
+
   return (
     <nav className='max-h-13 bg-gray-100 dark:bg-gray-600 border-b px-4 py-2 flex items-center justify-between'>
       {/* Left side (logo + menus) */}
@@ -27,21 +29,23 @@ export default function Navbar() {
         <Dropdown
           label='Food'
           items={[
-            { label: "Pantry Items", href: "/dashboard" },
-            { label: "Saved", href: "/favorites" },
+            { label: "Pantry Items", href: "/food" },
+            { label: "Saved", href: "/food/favorites" },
           ]}
           isOpen={openMenu === "food"}
           onToggle={() => handleToggle("food")}
+          closeAll={closeAll}
         />
 
         <Dropdown
           label='Drink'
           items={[
             { label: "Bar Inventory", href: "/drink" },
-            { label: "Saved", href: "/bar-favorites" },
+            { label: "Saved", href: "/drink/favorites" },
           ]}
           isOpen={openMenu === "drink"}
           onToggle={() => handleToggle("drink")}
+          closeAll={closeAll}
         />
       </div>
 

@@ -16,13 +16,23 @@ export default function FavoritesPage() {
   useEffect(() => {
     if (!user) return;
 
-    const favRef = collection(db, "users", user.uid, "favorites");
+    const favRef = collection(
+      db,
+      "users",
+      user.uid,
+      "food",
+      "favorites",
+      "list"
+    );
     const unsubscribe = onSnapshot(favRef, (snapshot) => {
       const favs = snapshot.docs.map((doc) => ({
-        id: doc.id,
+        favoriteId: doc.id,
         ...doc.data(),
       }));
-      setFavorites(favs);
+      // setFavorites(favs);
+      setFavorites(
+        favs.filter((v, i, a) => a.findIndex((x) => x.id === v.id) === i)
+      );
     });
 
     return () => unsubscribe();
@@ -49,6 +59,7 @@ export default function FavoritesPage() {
                 recipe={recipe}
                 user={user}
                 favorites={favorites}
+                type='food'
               />
               // <div
               //   key={recipe.id}

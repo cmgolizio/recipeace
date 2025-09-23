@@ -1,8 +1,71 @@
-import axios from "axios";
-import { addDoc, collection, deleteDoc, doc } from "firebase/firestore";
-
+import { doc, collection, addDoc, deleteDoc } from "firebase/firestore";
 import { db } from "./firebase";
 
+export const isFavorited = (favorites, recipeId) => {
+  return favorites.some((fav) => fav.id === String(recipeId));
+};
+
+export const toggleFavorite = async (
+  user,
+  favorites,
+  recipe,
+  type = "food"
+) => {
+  if (!user?.uid || !recipe?.id) return;
+
+  const recipeId = String(recipe.id);
+  const exists = isFavorited(favorites, recipeId);
+
+  try {
+    const favsCollectionRef = collection(
+      db,
+      "users",
+      user.uid,
+      type,
+      "favorites",
+      "list"
+    );
+
+    if (exists) {
+      // Find the Firestore doc ID for deletion
+      const docToDelete = favorites.find((f) => f.id === recipeId);
+      if (docToDelete) {
+        await deleteDoc(
+          doc(
+            db,
+            "users",
+            user.uid,
+            type,
+            "favorites",
+            "list",
+            docToDelete.favoriteId
+          )
+        );
+        console.log(`Removed ${type} recipe ${recipe.title} from favorites`);
+      }
+    } else {
+      // Add new favorite
+      const newDocRef = await addDoc(favsCollectionRef, {
+        id: recipeId,
+        title: recipe.title,
+        image: recipe.image,
+        usedIngredientCount: recipe.usedIngredientCount ?? 0,
+        missedIngredientCount: recipe.missedIngredientCount ?? 0,
+        missedIngredients:
+          recipe.missedIngredients.map((ing) => ing.name) ?? [],
+      });
+      console.log(`Added ${type} recipe ${recipe.title} to favorites`);
+      // Firestore generates newDocRef.id automatically → this is the favoriteId
+    }
+  } catch (err) {
+    console.error(`Error toggling favorite for ${type} recipe:`, err);
+  }
+};
+
+// /**
+//  * (Optional) Open a recipe source URL — keeps old functionality
+//  * @param {string|number} recipeId
+//  */
 export async function fetchRecipeSourceUrl(id) {
   try {
     const res = await axios.get("/api/spoonacular/recipe-source", {
@@ -19,34 +82,4 @@ export async function fetchRecipeSourceUrl(id) {
     console.error("Error fetching recipe source URL:", err);
     return null;
   }
-}
-
-export function isFavorited(favorites, id) {
-  if (!Array.isArray(favorites)) return false;
-
-  return favorites.some((fav) => fav.id === id);
-}
-
-export async function toggleFavorite(user, favorites, recipe) {
-  if (!user) return;
-
-  const favoritesRef = collection(db, "users", user.uid, "favorites");
-
-  if (isFavorited(favorites, recipe.id)) {
-    // Remove favorite
-    const favDoc = favorites.find((fav) => fav.id === recipe.id);
-    await deleteDoc(doc(db, "users", user.uid, "favorites", favDoc.id));
-  } else {
-    // Add favorite
-    await addDoc(favoritesRef, {
-      id: recipe.id,
-      title: recipe.title,
-      image: recipe.image,
-    });
-  }
-}
-
-export async function removeFavorite(user, id) {
-  if (!user || !id) return;
-  await deleteDoc(doc(db, "users", user.uid, "favorites", id));
 }

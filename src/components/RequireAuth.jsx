@@ -24,7 +24,7 @@ export default function RequireAuth({ children }) {
   }
 
   if (!user) {
-    return null; // prevent flashing dashboard content before redirect
+    return null; // prevent flashing food content before redirect
   }
 
   return children;

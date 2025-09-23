@@ -1,14 +1,42 @@
 "use client";
 
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { HiChevronDown } from "react-icons/hi2";
 import Link from "next/link";
 
-export default function Dropdown({ label, items, isOpen, onToggle }) {
+export default function Dropdown({ label, items, isOpen, onToggle, closeAll }) {
+  const ref = useRef();
+  const [hovering, setHovering] = useState(false);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (ref.current && !ref.current.contains(e.target)) {
+        closeAll();
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [closeAll]);
+
+  useEffect(() => {
+    if (hovering && !isOpen) {
+      onToggle(); // open if hover starts
+    } else if (!hovering && isOpen) {
+      closeAll(); // close if hover ends
+    }
+  }, [hovering, isOpen, onToggle, closeAll]);
+
   return (
-    <div className='relative inline-block text-left'>
+    <div
+      className='relative inline-block text-left'
+      ref={ref}
+      onMouseEnter={() => setHovering(true)}
+      onMouseLeave={() => setHovering(false)}
+    >
       <button
         onClick={() => onToggle(label.toLowerCase())}
+        // onMouseEnter={() => onToggle(label.toLowerCase())}
         className='inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:dark:text-gray-100 hover:text-gray-900'
       >
         {label}
@@ -34,6 +62,7 @@ export default function Dropdown({ label, items, isOpen, onToggle }) {
                 key={item.href}
                 href={item.href}
                 className='block px-4 py-2 text-sm text-gray-700 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-600 bg-gray-200 dark:bg-gray-700'
+                onClick={closeAll}
               >
                 {item.label}
               </Link>

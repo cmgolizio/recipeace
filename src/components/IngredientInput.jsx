@@ -37,12 +37,6 @@ export default function IngredientInput({ onAdd }) {
     }
   }
 
-  //   function handleSelect(suggestion) {
-  //     onSelect(suggestion.name || suggestion);
-  //     setQuery("");
-  //     setSuggestions([]);
-  //   }
-
   // Debounce input
   useEffect(() => {
     if (timerRef.current) clearTimeout(timerRef.current);

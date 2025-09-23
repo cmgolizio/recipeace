@@ -27,7 +27,6 @@ export const toggleFavorite = async (
     );
 
     if (exists) {
-      // Find the Firestore doc ID for deletion
       const docToDelete = favorites.find((f) => f.id === recipeId);
       if (docToDelete) {
         await deleteDoc(
@@ -53,9 +52,9 @@ export const toggleFavorite = async (
         missedIngredientCount: recipe.missedIngredientCount ?? 0,
         missedIngredients:
           recipe.missedIngredients.map((ing) => ing.name) ?? [],
+        sourceUrl: recipe.sourceUrl,
       });
       console.log(`Added ${type} recipe ${recipe.title} to favorites`);
-      // Firestore generates newDocRef.id automatically → this is the favoriteId
     }
   } catch (err) {
     console.error(`Error toggling favorite for ${type} recipe:`, err);

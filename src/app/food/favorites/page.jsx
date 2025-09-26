@@ -11,27 +11,17 @@ export default function FavoritesPage() {
   const [user] = useAuthState(auth);
   const [favorites, setFavorites] = useState([]);
 
-  // Fetch favorites from Firestore
+  // Fetch favorites from Firestore (flattened collection)
   useEffect(() => {
     if (!user) return;
 
-    const favRef = collection(
-      db,
-      "users",
-      user.uid,
-      "food",
-      "favorites",
-      "list"
-    );
+    const favRef = collection(db, "users", user.uid, "foodFavorites");
     const unsubscribe = onSnapshot(favRef, (snapshot) => {
       const favs = snapshot.docs.map((doc) => ({
         favoriteId: doc.id,
         ...doc.data(),
       }));
-      // setFavorites(favs);
-      setFavorites(
-        favs.filter((v, i, a) => a.findIndex((x) => x.id === v.id) === i)
-      );
+      setFavorites(favs);
     });
 
     return () => unsubscribe();
@@ -48,7 +38,7 @@ export default function FavoritesPage() {
           <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-3'>
             {favorites.map((recipe) => (
               <RecipeCard
-                key={Math.floor(recipe.id * Math.random())}
+                key={String(recipe.favoriteId || recipe.id)}
                 recipe={recipe}
                 user={user}
                 favorites={favorites}

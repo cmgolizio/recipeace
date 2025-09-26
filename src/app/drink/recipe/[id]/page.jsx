@@ -18,7 +18,7 @@ import { SlHeart } from "react-icons/sl";
 
 import { db, auth } from "@/lib/firebase";
 
-export default function FoodRecipeDetailPage() {
+export default function DrinkRecipeDetailPage() {
   const { id } = useParams();
   const [user] = useAuthState(auth);
 
@@ -31,7 +31,7 @@ export default function FoodRecipeDetailPage() {
   useEffect(() => {
     const fetchRecipe = async () => {
       try {
-        const res = await axios.get(`/api/spoonacular/recipe/${id}`);
+        const res = await axios.get(`/api/cocktailDB/recipe/${id}`);
         setRecipe(res.data);
       } catch (err) {
         console.error("Error fetching recipe:", err);
@@ -48,7 +48,7 @@ export default function FoodRecipeDetailPage() {
     if (!user || !id) return;
 
     const checkFavorite = async () => {
-      const favRef = collection(db, "users", user.uid, "foodFavorites");
+      const favRef = collection(db, "users", user.uid, "drinkFavorites");
       const q = query(favRef, where("recipeId", "==", id));
       const snapshot = await getDocs(q);
 
@@ -67,17 +67,11 @@ export default function FoodRecipeDetailPage() {
   const addFavorite = async () => {
     if (!user) return alert("Sign in to save favorites.");
     try {
-      const favRef = collection(db, "users", user.uid, "foodFavorites");
+      const favRef = collection(db, "users", user.uid, "drinkFavorites");
       const docRef = await addDoc(favRef, {
         recipeId: id,
         title: recipe.title,
         image: recipe.image,
-        sourceUrl: recipe.sourceUrl,
-        servings: recipe.servings,
-        readyInMinutes: recipe.readyInMinutes,
-        preparationMinutes: recipe.preparationMinutes,
-        cookingMinutes: recipe.cookingMinutes,
-        pricePerServing: recipe.pricePerServing,
       });
       setIsFavorite(true);
       setFavDocId(docRef.id);
@@ -89,7 +83,7 @@ export default function FoodRecipeDetailPage() {
   const removeFavorite = async () => {
     if (!user || !favDocId) return;
     try {
-      await deleteDoc(doc(db, "users", user.uid, "foodFavorites", favDocId));
+      await deleteDoc(doc(db, "users", user.uid, "drinkFavorites", favDocId));
       setIsFavorite(false);
       setFavDocId(null);
     } catch (err) {

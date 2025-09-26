@@ -1,8 +1,6 @@
 import axios from "axios";
 import { NextResponse } from "next/server";
 
-// const BASE_URL = "https://www.thecocktaildb.com/api/json/v1/1";
-
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
   const query = searchParams.get("query");
@@ -24,19 +22,28 @@ export async function GET(req) {
   };
 
   try {
-    const res = await axios.request(options);
+    const response = await axios.request(options);
 
-    if (!res.ok) {
-      throw new Error(`CocktailDB request failed: ${res.status}`);
+    const data = response.data;
+
+    if (!data) {
+      return NextResponse.json(
+        { isValid: false, message: "Ingredient not found" },
+        { status: 404 }
+      );
     }
 
-    const data = await res.json();
+    const mutatedData = {
+      isValid: true,
+      name: data.ingredients[0].strIngredient,
+      message: "Ingredient found!",
+    };
 
-    return NextResponse.json(data);
+    return NextResponse.json(mutatedData);
   } catch (err) {
-    console.error("Error fetching cocktails:", err);
+    console.error("Error fetching cocktails:", err.message || err);
     return NextResponse.json(
-      { error: "Failed to fetch cocktails" },
+      { error: "Failed to validate ingredient" },
       { status: 500 }
     );
   }

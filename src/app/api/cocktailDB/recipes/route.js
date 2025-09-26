@@ -1,11 +1,12 @@
 import axios from "axios";
 import { NextResponse } from "next/server";
 
-// const BASE_URL = "https://www.thecocktaildb.com/api/json/v1/1";
+import { parseIngredients } from "@/lib/cocktailDb";
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const ingredients = searchParams.get("ingredients");
+  const parsedIngredientsList = parseIngredients(ingredients);
 
   if (!ingredients) {
     return NextResponse.json(
@@ -17,7 +18,7 @@ export async function GET(request) {
     method: "GET",
     url: "https://the-cocktail-db.p.rapidapi.com/filter.php",
     params: {
-      i: ingredients,
+      i: parsedIngredientsList,
     },
     headers: {
       "x-rapidapi-key": process.env.NEXT_PUBLIC_RAPID_API_KEY,
@@ -26,15 +27,9 @@ export async function GET(request) {
   };
 
   try {
-    // Build CocktailDB query (comma-separated ingredients)
-    // const url = `${BASE_URL}/filter.php?i=${ingredients}`;
-    const res = await axios.request(options);
+    const response = await axios.request(options);
 
-    if (!res.ok) {
-      throw new Error(`CocktailDB request failed: ${res.status}`);
-    }
-
-    const data = await res.json();
+    const data = response.data;
 
     return NextResponse.json(data);
   } catch (err) {

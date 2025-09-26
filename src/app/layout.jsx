@@ -1,42 +1,18 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-
 import "./globals.css";
 import Navbar from "@/components/Navbar";
-// import AuthButton from "@/components/AuthButton";
-// import ThemeToggle from "@/components/ThemeToggle";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 
 export default function RootLayout({ children }) {
-  const pathname = usePathname();
-
   return (
     <ThemeProvider>
       <html lang='en'>
-        <body className='bg-(#161611) min-h-screen flex flex-col'>
-          {/* Navbar */}
-          {/* <header className='bg-(#0b0b0a) shadow p-4 flex justify-between items-center'>
-            <Link href='/'>
-              <h1 className='text-xl font-bold'>ReciPeace</h1>
-            </Link>
-            <Link href='/food' className='text-2xl'>
-              Pantry
-            </Link>
-            <ThemeToggle />
-            <Link href='/food/favorites' className='text-2xl'>
-              Saved
-            </Link> */}
-          {/* {pathname !== "/login" && <AuthButton />} */}
-          {/* </header> */}
+        <body className='bg-[#161611] min-h-screen flex flex-col'>
           <Navbar />
-
-          {/* Main content */}
           <main className='flex-1 p-4'>{children}</main>
-
           {/* Footer */}
-          <footer className='bg-(#242423) shadow p-4 text-center text-gray-500'>
+          <footer className='bg-[#242423] shadow p-4 text-center text-gray-500'>
             &copy; 2025 ReciPeace
           </footer>
         </body>

@@ -12,7 +12,7 @@ import {
 import { useRouter } from "next/navigation";
 
 import { auth } from "@/lib/firebase";
-// import { ThemeProvider } from "@/contexts/ThemeContext";
+import CategoryButton from "@/components/CategoryButton";
 
 export default function Home() {
   const [email, setEmail] = useState("");
@@ -24,13 +24,12 @@ export default function Home() {
     const unsubscribe = onAuthStateChanged(auth, (u) => {
       if (u) {
         setUser(u);
-        router.push("/food");
       } else {
         setUser(null);
       }
     });
     return () => unsubscribe();
-  }, [router]);
+  }, []);
 
   const handleEmailSignIn = async () => {
     try {
@@ -66,11 +65,11 @@ export default function Home() {
   };
 
   return (
-    <div className='flex flex-col items-center justify-center min-h-screen bg-(#161611) p-6'>
+    <div className='flex flex-col items-center justify-center min-h-screen bg-[#161611] p-6'>
       <h1 className='text-3xl font-bold mb-6'>ReciPeace</h1>
 
       {!user ? (
-        <div className='w-full max-w-sm bg-(#161611) p-6 rounded-lg shadow'>
+        <div className='w-full max-w-sm bg-[#161611] p-6 rounded-lg shadow'>
           {/* Email login/signup */}
           <input
             type='email'
@@ -111,14 +110,16 @@ export default function Home() {
           </button>
         </div>
       ) : (
-        <div className='text-center'>
-          <p className='mb-4'>Logged in as {user.email || user.displayName}</p>
+        <div className='min-w-full h-full flex flex-row justify-center items-center text-center gap-8'>
+          <CategoryButton category='Food' />
+          <CategoryButton category='Drink' />
+          {/* <p className='mb-4'>Logged in as {user.email || user.displayName}</p>
           <button
             onClick={handleSignOut}
             className='bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800'
           >
             Sign Out
-          </button>
+          </button> */}
         </div>
       )}
     </div>

@@ -2,7 +2,7 @@ import React from "react";
 
 const IngredientList = ({ ingredientList, removeIngredient }) => {
   return (
-    <ul className='mt-4 space-y-2'>
+    <ul className='mt-10 space-y-2'>
       {ingredientList.map((item) => (
         <li
           key={item.id}

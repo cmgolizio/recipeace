@@ -30,21 +30,18 @@ export default function FoodPage() {
     }
   };
 
-  // Add a ingredient
+  // Add an ingredient (flattened path: users/{uid}/foodIngredients)
   const addIngredient = async (itemName) => {
     if (!user || !itemName) return;
 
     try {
       await ensureUserDoc(user.uid);
 
-      // Use subcollection "ingredients" under "food"
       const ingredientsRef = collection(
         db,
         "users",
         user.uid,
-        "food",
-        "ingredients",
-        "list"
+        "foodIngredients"
       );
       await addDoc(ingredientsRef, { name: itemName });
       console.log("Added ingredient:", itemName);
@@ -58,15 +55,7 @@ export default function FoodPage() {
     if (!user || !id) return;
 
     try {
-      const docRef = doc(
-        db,
-        "users",
-        user.uid,
-        "food",
-        "ingredients",
-        "list",
-        id
-      );
+      const docRef = doc(db, "users", user.uid, "foodIngredients", id);
       await deleteDoc(docRef);
       console.log("Removed ingredient:", id);
     } catch (err) {
@@ -78,14 +67,7 @@ export default function FoodPage() {
   useEffect(() => {
     if (!user?.uid) return;
 
-    const ingredientsRef = collection(
-      db,
-      "users",
-      user.uid,
-      "food",
-      "ingredients",
-      "list"
-    );
+    const ingredientsRef = collection(db, "users", user.uid, "foodIngredients");
     const unsubscribe = onSnapshot(ingredientsRef, (snapshot) => {
       const items = snapshot.docs.map((doc) => ({
         id: doc.id,
@@ -102,7 +84,7 @@ export default function FoodPage() {
       <main className='p-4 max-w-3xl mx-auto'>
         <h2 className='text-lg font-semibold mb-2'>Your Pantry</h2>
 
-        <IngredientInput onAdd={addIngredient} />
+        <IngredientInput onAdd={addIngredient} type='food' />
         <IngredientList
           ingredientList={ingredientList}
           removeIngredient={removeIngredient}

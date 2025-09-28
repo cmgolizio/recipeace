@@ -50,7 +50,7 @@ export default function Navbar() {
       </div>
 
       {/* Right side (auth + theme toggle) */}
-      <div className='flex items-center space-x-4'>
+      <div className='flex flex-row items-center space-x-4'>
         <ThemeToggle />
         <AuthButton />
       </div>

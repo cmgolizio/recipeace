@@ -1,5 +1,3 @@
-"use client";
-
 import axios from "axios";
 
 export async function validateCocktailIngredient(query) {
@@ -27,16 +25,14 @@ export async function validateCocktailIngredient(query) {
 }
 
 export function parseIngredients(ingredients) {
-  const ingNameArr = ingredients.map((ing) => ing.name);
+  if (!ingredients || !Array.isArray(ingredients)) return;
 
-  const parsedIngredientsList = ingNameArr.map((ingName) => {
-    if (ingName.includes(" ")) {
-      const newName = ingName.replace(" ", "_");
-      return newName;
-    } else {
-      return ingName;
-    }
-  });
+  const parsedQuery = ingredients
+    .map((ingName) => {
+      return ingName.replace(" ", "_");
+    })
+    .join(",");
 
-  return parsedIngredientsList;
+  console.log("INGREDIENTS: ", ingredients, "RES: ", parsedQuery);
+  return parsedQuery;
 }

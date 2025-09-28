@@ -35,8 +35,12 @@ export default function RecipeList({ ingredientList, type }) {
           params: { ingredients: ingredientList.join(","), strict },
         });
       } else {
-        res = await axios.get("/api/cocktailDB/recipes", {
-          params: { ingredients: parsedIngredients.join(",") },
+        res = await axios.get("/api/api-league/recipes", {
+          params: {
+            ingredients: ingredientList
+              .map((name) => name.replace(" ", "_"))
+              .join(","),
+          },
         });
       }
 

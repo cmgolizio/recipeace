@@ -11,13 +11,7 @@ import { useTheme } from "@/contexts/ThemeContext";
 
 export default function ThemeToggle() {
   const { theme, toggleTheme } = useTheme();
-
-  // useEffect(() => {
-  //   // Load saved preference
-  //   const saved = localStorage.getItem("data-theme") || "light";
-  //   setTheme(saved);
-  //   document.documentElement.classList.toggle("dark", saved === "dark");
-  // }, []);
+  s;
 
   return (
     <button
@@ -36,7 +30,7 @@ export default function ThemeToggle() {
           >
             <FaMoon
               className='w-6 h-6 hover:w-7 hover:h-7'
-              style={{ color: "#f2f2f2" }}
+              style={{ color: "#161611" }}
             />
           </motion.div>
         ) : (

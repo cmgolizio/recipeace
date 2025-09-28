@@ -65,11 +65,11 @@ export default function Home() {
   };
 
   return (
-    <div className='flex flex-col items-center justify-center min-h-screen bg-[#161611] p-6'>
+    <div className='flex flex-col items-center justify-center min-h-screen bg-[#f8f8ff] dark:bg-[#161611] p-6'>
       <h1 className='text-3xl font-bold mb-6'>ReciPeace</h1>
 
       {!user ? (
-        <div className='w-full max-w-sm bg-[#161611] p-6 rounded-lg shadow'>
+        <div className='w-full max-w-sm dark:bg-[#161611] p-6 rounded-lg shadow'>
           {/* Email login/signup */}
           <input
             type='email'

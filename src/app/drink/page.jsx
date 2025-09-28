@@ -19,7 +19,7 @@ import RecipeList from "@/components/RecipeList";
 
 export default function DrinkPage() {
   const [user] = useAuthState(auth);
-  const [ingredients, setIngredients] = useState([]);
+  const [drinkIngredients, setDrinkIngredients] = useState([]);
 
   // Ensure user doc exists before adding anything
   const ensureUserDoc = async (uid) => {
@@ -66,7 +66,7 @@ export default function DrinkPage() {
         id: doc.id,
         name: doc.data().name,
       }));
-      setIngredients(items);
+      setDrinkIngredients(items);
     });
 
     return () => unsubscribe();
@@ -79,18 +79,18 @@ export default function DrinkPage() {
 
         <IngredientInput onAdd={addIngredient} type='drink' />
         <IngredientList
-          ingredientList={ingredients}
+          ingredientList={drinkIngredients}
           removeIngredient={removeIngredient}
         />
 
-        {ingredients.length === 0 && (
+        {drinkIngredients.length === 0 && (
           <p className='mt-2 text-gray-500 dark:text-gray-400 text-sm'>
             Your bar is empty. Add some mixers and spirits above!
           </p>
         )}
 
         <RecipeList
-          ingredientList={ingredients.map((i) => i.name)}
+          ingredientList={drinkIngredients.map((i) => i.name)}
           type='drink'
         />
       </main>

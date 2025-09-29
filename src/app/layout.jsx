@@ -8,7 +8,7 @@ export default function RootLayout({ children }) {
   return (
     <ThemeProvider>
       <html lang='en'>
-        <body className='bg-[#161611] min-h-screen flex flex-col'>
+        <body className='bg-[#f8f8ff] dark:bg-[#161611] dark:text-[#f8f8ff] text-[#161611] min-h-screen flex flex-col'>
           <Navbar />
           <main className='flex-1 p-4'>{children}</main>
           {/* Footer */}

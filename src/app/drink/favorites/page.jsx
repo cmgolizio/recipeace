@@ -6,8 +6,9 @@ import { collection, onSnapshot } from "firebase/firestore";
 
 import { db, auth } from "@/lib/firebase";
 import RecipeCard from "@/components/RecipeCard";
+import LoadingSkeleton from "@/components/LoadingSkeleton";
 
-export default function FavoritesPage() {
+export default function DrinkFavoritesPage() {
   const [user] = useAuthState(auth);
   const [favorites, setFavorites] = useState([]);
 

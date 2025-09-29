@@ -16,6 +16,7 @@ import IngredientInput from "@/components/IngredientInput";
 import IngredientList from "@/components/IngredientList";
 import { db, auth } from "@/lib/firebase";
 import RecipeList from "@/components/RecipeList";
+import LoadingSkeleton from "@/components/LoadingSkeleton";
 
 export default function DrinkPage() {
   const [user] = useAuthState(auth);
@@ -88,7 +89,6 @@ export default function DrinkPage() {
             Your bar is empty. Add some mixers and spirits above!
           </p>
         )}
-
         <RecipeList
           ingredientList={drinkIngredients.map((i) => i.name)}
           type='drink'

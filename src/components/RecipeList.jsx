@@ -7,7 +7,7 @@ import { collection, onSnapshot } from "firebase/firestore";
 
 import { auth, db } from "@/lib/firebase";
 import RecipeCard from "./RecipeCard";
-import { parseIngredients } from "@/lib/cocktailDb";
+import LoadingSkeleton from "./LoadingSkeleton";
 
 export default function RecipeList({ ingredientList, type }) {
   const [user] = useAuthState(auth);
@@ -28,7 +28,6 @@ export default function RecipeList({ ingredientList, type }) {
     setError(null);
 
     try {
-      let parsedIngredients = parseIngredients(ingredientList);
       let res;
       if (type === "food") {
         res = await axios.get("/api/spoonacular/recipes", {
@@ -106,20 +105,7 @@ export default function RecipeList({ ingredientList, type }) {
         <p className='mt-4 text-red-500 text-sm font-medium'>{error}</p>
       )}
 
-      {loading && (
-        <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-6 animate-pulse'>
-          {[...Array(6)].map((_, idx) => (
-            <div
-              key={`skeleton-${idx}`}
-              className='p-4 border rounded-lg shadow bg-gray-100 h-56'
-            >
-              <div className='w-full h-32 bg-gray-300 rounded-md'></div>
-              <div className='h-4 bg-gray-300 rounded mt-3 w-3/4'></div>
-              <div className='h-3 bg-gray-300 rounded mt-2 w-1/2'></div>
-            </div>
-          ))}
-        </div>
-      )}
+      {loading && <LoadingSkeleton type={"recipe"} />}
 
       {!loading && recipes && recipes.length > 0 && (
         <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-6'>

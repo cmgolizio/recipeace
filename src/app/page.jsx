@@ -9,7 +9,6 @@ import {
   signOut,
   onAuthStateChanged,
 } from "firebase/auth";
-import { useRouter } from "next/navigation";
 
 import { auth } from "@/lib/firebase";
 import CategoryButton from "@/components/CategoryButton";
@@ -18,7 +17,6 @@ export default function Home() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
-  const router = useRouter();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (u) => {
@@ -65,7 +63,7 @@ export default function Home() {
   };
 
   return (
-    <div className='flex flex-col items-center justify-center min-h-screen bg-[#f8f8ff] dark:bg-[#161611] p-6'>
+    <div className='flex flex-col items-center justify-center min-h-screen p-6'>
       <h1 className='text-3xl font-bold mb-6'>ReciPeace</h1>
 
       {!user ? (

@@ -6,7 +6,7 @@ const IngredientList = ({ ingredientList, removeIngredient }) => {
       {ingredientList.map((item) => (
         <li
           key={item.id}
-          className='flex justify-between items-center bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-100 p-2 rounded'
+          className='flex justify-between items-center dark:bg-gray-100 bg-gray-800 dark:text-gray-800 text-gray-100 p-2 rounded'
         >
           <span>{item.name}</span>
           <button

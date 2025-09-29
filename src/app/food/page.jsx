@@ -16,6 +16,7 @@ import IngredientInput from "@/components/IngredientInput";
 import IngredientList from "@/components/IngredientList";
 import { db, auth } from "@/lib/firebase";
 import RecipeList from "@/components/RecipeList";
+import LoadingSkeleton from "@/components/LoadingSkeleton";
 
 export default function FoodPage() {
   const [user] = useAuthState(auth);
@@ -80,7 +81,7 @@ export default function FoodPage() {
   }, [user]);
 
   return (
-    <div className='min-h-screen bg-[var(--color-bg)] text-[var(--color-text)]'>
+    <div className='min-h-screen'>
       <main className='p-4 max-w-3xl mx-auto'>
         <h2 className='text-lg font-semibold mb-2'>Your Pantry</h2>
 

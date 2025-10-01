@@ -1,5 +1,7 @@
 import { doc, setDoc, deleteDoc } from "firebase/firestore";
+
 import { db } from "@/lib/firebase";
+import { supabase } from "@/lib/supabaseClient";
 
 /**
  * Check if a recipe is favorited.
@@ -50,8 +52,8 @@ export async function toggleFavorite(user, favorites = [], recipe = {}, type) {
       const payload = {
         id: recipe.id,
         title: recipe.title || recipe.name || "",
-        image: recipe.image || recipe.thumbnail || "",
-        sourceUrl: recipe.sourceUrl || recipe.url || "",
+        image: recipe.image || recipe.image_url || "",
+        sourceUrl: recipe.sourceUrl || "",
         addedAt: Date.now(),
       };
       await setDoc(favDocRef, payload);
@@ -60,4 +62,33 @@ export async function toggleFavorite(user, favorites = [], recipe = {}, type) {
   } catch (err) {
     console.error("toggleFavorite error:", err);
   }
+}
+
+export async function addFavoriteCocktail(userId, cocktailId) {
+  // First get cocktail info from Supabase
+  const { data: cocktail, error } = await supabase
+    .from("cocktails")
+    .select("id, name, image_url")
+    .eq("id", cocktailId)
+    .single();
+
+  if (error) throw error;
+
+  // Save in Firestore
+  const favRef = doc(
+    db,
+    "users",
+    userId,
+    "drinkFavorites",
+    cocktail.id.toString()
+  );
+  await setDoc(favRef, {
+    id: cocktail.id,
+    cocktailId: cocktail.id,
+    name: cocktail.name,
+    image_url: cocktail.image_url,
+    createdAt: new Date(),
+  });
+
+  return cocktail;
 }

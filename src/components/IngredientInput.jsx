@@ -3,8 +3,6 @@
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 
-import { validateCocktailIngredient } from "@/lib/cocktailDb";
-
 export default function IngredientInput({ onAdd, type, setAddedMessage }) {
   const [input, setInput] = useState("");
   const [suggestions, setSuggestions] = useState([]);
@@ -38,28 +36,6 @@ export default function IngredientInput({ onAdd, type, setAddedMessage }) {
     }
   }
 
-  // validate drink input with The CocktailDB
-
-  const validateIngredient = async (e) => {
-    e.preventDefault();
-
-    if (!input) return;
-
-    setLoading(true);
-
-    // const normalizedInput = input.trim().toLowerCase();
-    const ing = await validateCocktailIngredient(input);
-
-    if (!ing?.isValid) {
-      setLoading(false);
-      alert(`❌ ${input} is not in the approved CocktailDB list.`);
-      return;
-    }
-
-    setLoading(false);
-    handleAdd(ing.name);
-  };
-
   // Debounce input for food
   useEffect(() => {
     if (type === "drink") return;
@@ -89,7 +65,7 @@ export default function IngredientInput({ onAdd, type, setAddedMessage }) {
       if (highlightedIndex >= 0 && highlightedIndex < suggestions.length) {
         handleAdd(suggestions[highlightedIndex].name);
       } else {
-        type === "drink" ? validateIngredient(e) : handleAdd(input);
+        type === "drink" ? onAdd(e) : handleAdd(input);
       }
     } else if (e.key === "ArrowDown") {
       e.preventDefault();
@@ -127,7 +103,7 @@ export default function IngredientInput({ onAdd, type, setAddedMessage }) {
           />
           <button
             className='absolute right-0 scale-95 rounded-md px-3 py-2 text-gray-100 bg-gray-600 hover:bg-gray-700 hover:scale-101 active:bg-gray-800'
-            onClick={(e) => validateIngredient(e)}
+            onClick={(e) => onAdd(e)}
           >
             Add
           </button>

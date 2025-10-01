@@ -16,7 +16,8 @@ import IngredientInput from "@/components/IngredientInput";
 import IngredientList from "@/components/IngredientList";
 import { db, auth } from "@/lib/firebase";
 import RecipeList from "@/components/RecipeList";
-import LoadingSkeleton from "@/components/LoadingSkeleton";
+// import LoadingSkeleton from "@/components/LoadingSkeleton";
+import { addIngredient } from "@/services/drink-ingredients/addIngredient";
 
 export default function DrinkPage() {
   const [user] = useAuthState(auth);
@@ -29,20 +30,22 @@ export default function DrinkPage() {
     if (!snap.exists()) await setDoc(userDocRef, {});
   };
 
-  // Add a drink ingredient (path: users/{uid}/drinkIngredients)
-  const addIngredient = async (itemName) => {
-    if (!user || !itemName) return;
+  async function handleAddIngredient(e) {
+    e.preventDefault();
+    setError("");
 
     try {
       await ensureUserDoc(user.uid);
 
-      const ingRef = collection(db, "users", user.uid, "drinkIngredients");
-      await addDoc(ingRef, { name: itemName });
-      console.log("Added drink ingredient:", itemName);
+      const ingredient = await addIngredient(user.uid, input);
+      // setDrinkIngredients((prev) => [...prev, ingredient]);
+
+      console.log("Added:", ingredient);
+      setInput(""); // clear input
     } catch (err) {
-      console.error("Error adding drink ingredient:", err);
+      setError(err.message);
     }
-  };
+  }
 
   // Remove an ingredient
   const removeIngredient = async (id) => {
@@ -78,7 +81,7 @@ export default function DrinkPage() {
       <main className='p-4 max-w-3xl mx-auto'>
         <h2 className='text-lg font-semibold mb-2'>Your Bar Well</h2>
 
-        <IngredientInput onAdd={addIngredient} type='drink' />
+        <IngredientInput onAdd={handleAddIngredient} type='drink' />
         <IngredientList
           ingredientList={drinkIngredients}
           removeIngredient={removeIngredient}

@@ -46,12 +46,12 @@ export default function IngredientInput({ onAdd, type, setAddedMessage }) {
 
     setLoading(true);
 
-    try {
-      // Get Firebase ID token
-      const user = auth.currentUser;
-      if (!user) throw new Error("User not logged in");
-      const idToken = await user.getIdToken();
+    // Get Firebase ID token
+    const user = auth.currentUser;
+    if (!user) throw new Error("User not logged in");
+    const idToken = await user.getIdToken();
 
+    try {
       // Call API route
       const res = await fetch("/api/drank/ingredients", {
         method: "POST",
@@ -69,13 +69,11 @@ export default function IngredientInput({ onAdd, type, setAddedMessage }) {
       }
 
       // Add to Firestore
-      // await addDrinkIngredient(data.userId, data.ingredient);
       await onAdd(data.ingredient);
 
       // Update UI
       setLoading(false);
       setInput("");
-      // handleAdd(data.ingredient.name);
     } catch (err) {
       console.error(err);
       setError("Error validating ingredient");

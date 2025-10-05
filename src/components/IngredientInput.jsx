@@ -3,7 +3,8 @@
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 
-import { validateCocktailIngredient } from "@/lib/cocktailDb";
+import { addDrinkIngredient } from "@/lib/addDrinkIngredient";
+import { auth } from "@/lib/firebase";
 
 export default function IngredientInput({ onAdd, type, setAddedMessage }) {
   const [input, setInput] = useState("");
@@ -38,26 +39,48 @@ export default function IngredientInput({ onAdd, type, setAddedMessage }) {
     }
   }
 
-  // validate drink input with The CocktailDB
-
+  // validate drink input with Supabase "Drank" database, before adding to Firestore
   const validateIngredient = async (e) => {
     e.preventDefault();
-
     if (!input) return;
 
     setLoading(true);
 
-    // const normalizedInput = input.trim().toLowerCase();
-    const ing = await validateCocktailIngredient(input);
+    try {
+      // Get Firebase ID token
+      const user = auth.currentUser;
+      if (!user) throw new Error("User not logged in");
+      const idToken = await user.getIdToken();
 
-    if (!ing?.isValid) {
+      // Call API route
+      const res = await fetch("/api/drank/ingredients", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ingredientName: input, idToken }),
+      });
+
+      const data = await res.json();
+      console.log("validateIngredient response:", data);
+
+      if (!res.ok) {
+        alert(`❌ ${data.error || "Ingredient not found"}`);
+        setLoading(false);
+        return;
+      }
+
+      // Add to Firestore
+      // await addDrinkIngredient(data.userId, data.ingredient);
+      await onAdd(data.ingredient);
+
+      // Update UI
       setLoading(false);
-      alert(`❌ ${input} is not in the approved CocktailDB list.`);
-      return;
+      setInput("");
+      // handleAdd(data.ingredient.name);
+    } catch (err) {
+      console.error(err);
+      setError("Error validating ingredient");
+      setLoading(false);
     }
-
-    setLoading(false);
-    handleAdd(ing.name);
   };
 
   // Debounce input for food
@@ -123,7 +146,7 @@ export default function IngredientInput({ onAdd, type, setAddedMessage }) {
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder='Add spirit or mixer...'
-            className='w-full p-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300'
+            className='w-full p-2 border rounded-md focus:outline-none focus:ring focus:border-none border-none'
           />
           <button
             className='absolute right-0 scale-95 rounded-md px-3 py-2 text-gray-100 bg-gray-600 hover:bg-gray-700 hover:scale-101 active:bg-gray-800'
@@ -135,7 +158,7 @@ export default function IngredientInput({ onAdd, type, setAddedMessage }) {
       )}
 
       {loading && (
-        <div className='absolute z-10 top-full left-0 w-full mt-1 border rounded-md shadow-lg h-fit overflow-y-auto bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-gray-200'>
+        <div className='relative left-0 top-full ml-1.5 py-1.5 rounded-md shadow-lg h-fit overflow-y-auto bg-transparent text-violet-600 text-2xl'>
           <p className='animate-pulse'>
             {type === "food"
               ? "Loading suggestions..."

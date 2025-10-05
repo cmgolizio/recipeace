@@ -10,16 +10,20 @@ import {
   doc,
   getDoc,
   setDoc,
+  serverTimestamp,
 } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
 import IngredientInput from "@/components/IngredientInput";
 import IngredientList from "@/components/IngredientList";
 import { db, auth } from "@/lib/firebase";
 import RecipeList from "@/components/RecipeList";
-import LoadingSkeleton from "@/components/LoadingSkeleton";
 
 export default function DrinkPage() {
-  const [user] = useAuthState(auth);
+  // const [user] = useAuthState(auth);
+  // const auth = getAuth();
+  // const user = auth.currentUser;
+  const [user, loading, error] = useAuthState(auth);
   const [drinkIngredients, setDrinkIngredients] = useState([]);
 
   // Ensure user doc exists before adding anything
@@ -30,18 +34,31 @@ export default function DrinkPage() {
   };
 
   // Add a drink ingredient (path: users/{uid}/drinkIngredients)
-  const addIngredient = async (itemName) => {
-    if (!user || !itemName) return;
-
-    try {
-      await ensureUserDoc(user.uid);
-
-      const ingRef = collection(db, "users", user.uid, "drinkIngredients");
-      await addDoc(ingRef, { name: itemName });
-      console.log("Added drink ingredient:", itemName);
-    } catch (err) {
-      console.error("Error adding drink ingredient:", err);
+  const addIngredient = async (ingredient) => {
+    if (!user) {
+      console.error("User not logged in yet");
+      return;
     }
+
+    if (!ingredient?.name) {
+      console.error("Invalid ingredient:", ingredient);
+      return;
+    }
+
+    await ensureUserDoc(user.uid);
+
+    const docRef = doc(collection(db, "users", user.uid, "drinkIngredients"));
+    await setDoc(docRef, {
+      supabaseId: ingredient.id,
+      name: ingredient.name,
+      type: ingredient.type,
+      subcategory: ingredient.subcategory,
+      abv: ingredient.abv,
+      notes: ingredient.notes,
+      addedAt: serverTimestamp(),
+    });
+
+    console.log("✅ Added ingredient:", ingredient.name);
   };
 
   // Remove an ingredient

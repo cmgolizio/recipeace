@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 
-import { addDrinkIngredient } from "@/lib/addDrinkIngredient";
+import { addDrinkIngredient } from "@/helpers/addDrinkIngredient";
 import { auth } from "@/lib/firebase";
 
 export default function IngredientInput({ onAdd, type, setAddedMessage }) {
@@ -144,10 +144,10 @@ export default function IngredientInput({ onAdd, type, setAddedMessage }) {
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder='Add spirit or mixer...'
-            className='w-full p-2 border rounded-md focus:outline-none focus:ring focus:border-none border-none'
+            className='w-full p-2 bg-gray-700 active:bg-gray-600 dark:bg-gray-300 dark:hover:bg-gray-400 dark:active:bg-gray-200 border rounded-md focus:outline-none focus:ring focus:border-none border-none'
           />
           <button
-            className='absolute right-0 scale-95 rounded-md px-3 py-2 text-gray-100 bg-gray-600 hover:bg-gray-700 hover:scale-101 active:bg-gray-800'
+            className='absolute right-0 scale-95 rounded-md px-3 py-2 text-gray-100 bg-gray-500 hover:bg-gray-400 hover:scale-105 active:scale-95 active:bg-gray-600'
             onClick={(e) => validateIngredient(e)}
           >
             Add
@@ -156,7 +156,7 @@ export default function IngredientInput({ onAdd, type, setAddedMessage }) {
       )}
 
       {loading && (
-        <div className='relative left-0 top-full ml-1.5 py-1.5 rounded-md shadow-lg h-fit overflow-y-auto bg-transparent text-violet-600 text-2xl'>
+        <div className='absolute left-0 top-full ml-1.5 py-1.5 rounded-md shadow-lg h-fit overflow-y-auto bg-transparent text-violet-600 text-xl'>
           <p className='animate-pulse'>
             {type === "food"
               ? "Loading suggestions..."

@@ -1,6 +1,6 @@
 import { doc, collection, setDoc, serverTimestamp } from "firebase/firestore";
 
-import { db } from "./firebase";
+import { db } from "@/lib/firebase";
 
 export async function addDrinkIngredient(userId, ingredient) {
   if (!userId || !ingredient?.name) return;

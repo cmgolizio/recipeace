@@ -82,13 +82,20 @@ export default function DrinkPage() {
     const unsubscribe = onSnapshot(ingRef, (snapshot) => {
       const items = snapshot.docs.map((doc) => ({
         id: doc.id,
-        name: doc.data().name,
+        ...doc.data(),
       }));
       setDrinkIngredients(items);
     });
 
     return () => unsubscribe();
   }, [user]);
+
+  useEffect(() => {
+    console.log(
+      "Current drink ingredients (from '/drink/page.jsx'):",
+      drinkIngredients
+    );
+  }, [drinkIngredients]);
 
   return (
     <div className='min-h-screen bg-[var(--color-bg)] text-[var(--color-text)]'>
@@ -107,7 +114,8 @@ export default function DrinkPage() {
           </p>
         )}
         <RecipeList
-          ingredientList={drinkIngredients.map((i) => i.name)}
+          // ingredientList={drinkIngredients.map((i) => i.name)}
+          ingredientList={drinkIngredients}
           type='drink'
         />
       </main>

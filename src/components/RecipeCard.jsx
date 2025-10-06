@@ -4,9 +4,15 @@ import { useState } from "react";
 import Link from "next/link";
 import { SlHeart } from "react-icons/sl";
 import { ImHeart } from "react-icons/im";
-import { isFavorited, toggleFavorite } from "@/lib/utils";
+import { isFavorited, toggleFavorite } from "@/helpers/utils";
 
-export default function RecipeCard({ recipe, user, favorites, type }) {
+export default function RecipeCard({
+  recipe,
+  user,
+  favorites,
+  ingredientsList,
+  type,
+}) {
   const [tooltipVisible, setTooltipVisible] = useState(false);
 
   const handleMouseEnter = () => setTooltipVisible(true);

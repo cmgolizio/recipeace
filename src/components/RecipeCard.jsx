@@ -21,7 +21,7 @@ export default function RecipeCard({
   return (
     <div className='border rounded-lg p-4 shadow hover:shadow-lg transition flex flex-col text-center relative'>
       <img
-        src={recipe.image}
+        src={recipe.image || recipe.image_url}
         alt={recipe.title || recipe.name}
         className='w-full h-40 object-cover rounded'
       />

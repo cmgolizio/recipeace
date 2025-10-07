@@ -13,7 +13,7 @@ const LoadingSkeleton = ({ type }) => {
       ))}
     </ul>
   ) : type === "recipe" ? (
-    <div className='grid grid-cols-1 md:cols-2 lg:cols-3 gap-4 mt-6 animate-pulse'>
+    <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6 animate-pulse'>
       {[...Array(6)].map((_, idx) => (
         <div
           key={`skeleton-${idx}`}

@@ -1,36 +1,117 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Recipeace
 
-## Getting Started
+Recipeace is a web application that helps users discover food and cocktail recipes based on the ingredients they already have on hand. By integrating data from both external and custom-built databases, Recipeace provides an intuitive and efficient way to minimize waste and maximize creativity in the kitchen and bar.
 
-First, run the development server:
+---
+
+## Table of Contents
+
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Architecture](#architecture)
+- [Installation and Setup](#installation-and-setup)
+- [Usage](#usage)
+- [APIs and Data Sources](#apis-and-data-sources)
+- [Future Improvements](#future-improvements)
+- [Author](#author)
+
+---
+
+## Features
+
+- **Personalized Pantry Management**
+  Users can add and manage food ingredients in their digital pantry.
+
+- **Smart Recipe Search**
+  Recipeace fetches recipes from the Spoonacular API that match the user’s available ingredients.
+
+- **Cocktail Discovery**
+  Users can search for cocktails based on the ingredients they have. Cocktail data is fetched from a custom Supabase database.
+
+- **Ingredient Validation**
+  Ingredient names are validated against verified data from Spoonacular to ensure accuracy and consistency.
+
+- **Secure Authentication**
+  User authentication and session management are handled via Firebase Authentication.
+
+- **Unified Interface**
+  A clean, responsive UI built with TailwindCSS for a smooth and consistent experience across devices.
+
+---
+
+## Tech Stack
+
+**Frontend Framework:** Next.js
+**Authentication:** Firebase Authentication
+**Database:** Firestore (for user data)
+**External Database:** Supabase (for cocktails and ingredients)
+**API Integration:** Spoonacular API (for food and ingredient data)
+**HTTP Client:** Axios
+**Styling:** TailwindCSS
+
+---
+
+## Architecture
+
+The application’s architecture integrates multiple data sources through a unified Next.js frontend:
+
+- **Firebase Auth** manages user sign-in and access control.
+- **Firestore** stores user-specific data such as pantry contents.
+- **Spoonacular API** provides real-time recipe and ingredient data for food recipes.
+- **Supabase** hosts the project’s custom cocktail and ingredient database, accessible exclusively through Recipeace.
+- **Next.js** manages server-side rendering and client-side routing for optimal performance and SEO.
+
+---
+
+## Installation and Setup
+
+To run Recipeace locally:
 
 ```bash
+# Clone the repository
+git clone https://github.com/cmgolizio/recipeace.git
+
+# Navigate into the project directory
+cd recipeace
+
+# Install dependencies
+npm install
+
+# Run the development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The app will be available at [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Usage
 
-## Learn More
+1. **Sign Up / Log In** using Firebase Authentication.
+2. **Add Ingredients** to your digital pantry.
+3. **Search for Recipes** that match the ingredients you have on hand.
+4. **Explore Cocktails** using the integrated Supabase-powered cocktail database.
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## APIs and Data Sources
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **[Spoonacular API](https://spoonacular.com/food-api)** – Used for food recipes, ingredient validation, and related data.
+- **Supabase Database** – Custom-built and privately hosted; used for cocktail and ingredient data specific to Recipeace.
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Future Improvements
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Deployment via Vercel or Netlify
+- User-generated recipes and cocktails
+- Advanced filtering and sorting for search results
+- Social sharing of recipe collections
+- AI-assisted ingredient substitution suggestions
+
+---
+
+## Author
+
+**Christopher Golizio**
+[GitHub Profile](https://github.com/cmgolizio)

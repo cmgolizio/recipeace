@@ -13,6 +13,7 @@ export async function addDrinkIngredient(userId, ingredient) {
     subcategory: ingredient.subcategory,
     abv: ingredient.abv,
     notes: ingredient.notes,
+    image_url: ingredient.image_url || null,
     addedAt: serverTimestamp(),
   });
 }

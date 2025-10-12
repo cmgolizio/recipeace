@@ -19,26 +19,6 @@ export default function RecipeList({ ingredientList, type }) {
   const [error, setError] = useState(null);
   const [favorites, setFavorites] = useState([]);
 
-  // async function handleFindCocktails() {
-  //   const ingredientIds = drinkIngredients.map((i) => i.supabaseId);
-
-  //   const res = await fetch("/api/drank/cocktails", {
-  //     method: "POST",
-  //     headers: { "Content-Type": "application/json" },
-  //     body: JSON.stringify({ ingredientIds }),
-  //   });
-
-  //   const data = await res.json();
-  //   if (!res.ok) {
-  //     console.error("Error fetching recipes:", data.error);
-  //     return null;
-  //   }
-
-  //   console.log("Found recipes:", data.recipes);
-  //   // setRecipes(data.recipes); // <-- update your UI state here
-  //   return data.recipes;
-  // }
-
   // Fetch recipes
   const fetchRecipes = async () => {
     if (!ingredientList || ingredientList.length === 0) {
@@ -50,43 +30,12 @@ export default function RecipeList({ ingredientList, type }) {
     setError(null);
 
     try {
-      // let res;
-
       if (type === "food") {
-        //   res = await axios.get("/api/spoonacular/recipes", {
-        //     params: { ingredients: ingredientList.join(","), strict },
-        //   });
-
-        //   if (!res?.data || res.data.length === 0) {
-        //     setRecipes([]);
-        //     setError(`No ${type} recipes found with these ingredients.`);
-        //   } else {
-        //     setRecipes(res.data);
-        //   }
-
         const recipes = await handleFindRecipes(ingredientList, strict);
         recipes !== null ? setRecipes(recipes) : setRecipes([]);
       } else if (type === "drink") {
-        // res = await axios.get("/api/drank/cocktails", {
-        //   params: {
-        //     ingredientIds: userIngredientIds
-        //   },
-        // });
-
-        // const userIngredientIds = drinkIngredients.map((i) => i.supabaseId);
-        // const response = await fetch("/api/find-recipes", {
-        //   method: "POST",
-        //   headers: { "Content-Type": "application/json" },
-        //   body: JSON.stringify({ ingredientIds: userIngredientIds }),
-        // });
-        // const recipes = await response.json();
-
         const cocktails = await handleFindCocktails(ingredientList);
         cocktails !== null ? setRecipes(cocktails) : setRecipes([]);
-
-        console.log("Supabase URL:", process.env.SUPABASE_URL);
-        console.log("Query result:", cocktails);
-        console.log("Query error:", error);
       }
     } catch (err) {
       console.error("Error fetching recipes:", err);

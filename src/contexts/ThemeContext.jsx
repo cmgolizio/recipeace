@@ -30,22 +30,10 @@ export const ThemeProvider = ({ children }) => {
     localStorage.setItem("theme", newTheme);
   };
 
-  // const toggleTheme = () => {
-  //   const newTheme = theme === "light" ? "dark" : "light";
-  //   setTheme(newTheme);
-  //   localStorage.setItem("theme", newTheme);
-  //   document.documentElement.classList.toggle("dark", newTheme === "dark");
-  // };
-
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
     localStorage.setItem("theme", theme);
   }, [theme]);
-
-  // const toggleTheme = () => {
-  //   const newTheme = theme === "light" ? "dark" : "light";
-  //   setTheme(newTheme);
-  // };
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>

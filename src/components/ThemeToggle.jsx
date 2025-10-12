@@ -2,9 +2,7 @@
 
 // import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaRegSun } from "react-icons/fa";
 import { FaSun } from "react-icons/fa6";
-import { FaRegMoon } from "react-icons/fa";
 import { FaMoon } from "react-icons/fa";
 
 import { useTheme } from "@/contexts/ThemeContext";

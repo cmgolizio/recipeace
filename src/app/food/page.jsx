@@ -11,16 +11,21 @@ import {
   getDoc,
   setDoc,
 } from "firebase/firestore";
+import { motion, AnimatePresence } from "framer-motion";
+import { TfiLayoutGrid3 } from "react-icons/tfi";
+import { PiListBold } from "react-icons/pi";
 
 import IngredientInput from "@/components/IngredientInput";
+import IngredientGrid from "@/components/IngredientGrid";
 import IngredientList from "@/components/IngredientList";
 import { db, auth } from "@/lib/firebase";
 import RecipeList from "@/components/RecipeList";
-import LoadingSkeleton from "@/components/LoadingSkeleton";
+// import LoadingSkeleton from "@/components/LoadingSkeleton";
 
 export default function FoodPage() {
   const [user] = useAuthState(auth);
   const [ingredientList, setIngredientList] = useState([]);
+  const [ingredientViewType, setIngredientViewType] = useState("list");
 
   // Ensure user doc exists before adding ingredient
   const ensureUserDoc = async (uid) => {
@@ -64,6 +69,34 @@ export default function FoodPage() {
     }
   };
 
+  useEffect(() => {
+    const storedIngredientView = localStorage.getItem("ingredientView");
+    if (storedIngredientView) {
+      setIngredientViewType(storedIngredientView);
+      document.documentElement.setAttribute(
+        "data-ing-view",
+        storedIngredientView
+      );
+    } else {
+      setIngredientViewType("list");
+      document.documentElement.setAttribute("data-ing-view", "list");
+    }
+  }, []);
+
+  const toggleIngredientView = (e) => {
+    e.preventDefault();
+
+    const newView = ingredientViewType === "list" ? "grid" : "list";
+    setIngredientViewType(newView);
+    document.documentElement.setAttribute("data-ing-view", newView);
+    localStorage.setItem("ingredientView", newView);
+  };
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-ing-view", ingredientViewType);
+    localStorage.setItem("ingredientView", ingredientViewType);
+  }, [ingredientViewType]);
+
   // Listen to ingredient changes
   useEffect(() => {
     if (!user?.uid) return;
@@ -84,12 +117,49 @@ export default function FoodPage() {
     <div className='min-h-screen'>
       <main className='p-4 max-w-3xl mx-auto'>
         <h2 className='text-lg font-semibold mb-2'>Your Pantry</h2>
-
-        <IngredientInput onAdd={addIngredient} type='food' />
-        <IngredientList
-          ingredientList={ingredientList}
-          removeIngredient={removeIngredient}
-        />
+        <div className='flex flex-row justify-start gap-4 items-center'>
+          <IngredientInput onAdd={addIngredient} type='food' />
+          <button
+            className='p-2 rounded-full transition'
+            onClick={(e) => toggleIngredientView(e)}
+            aria-label='Toggle Ingredient Display'
+          >
+            <AnimatePresence mode='wait' initial={false}>
+              {ingredientViewType === "list" ? (
+                <motion.div
+                  key='grid'
+                  initial={{ rotate: 90, opacity: 0 }}
+                  animate={{ rotate: 0, opacity: 1 }}
+                  exit={{ rotate: -90, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <TfiLayoutGrid3 className='w-6 h-6' />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key='list'
+                  initial={{ rotate: -90, opacity: 0 }}
+                  animate={{ rotate: 0, opacity: 1 }}
+                  exit={{ rotate: 90, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <PiListBold className='w-6 h-6' />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </button>
+        </div>
+        {ingredientViewType === "list" ? (
+          <IngredientList
+            ingredientList={ingredientList}
+            removeIngredient={removeIngredient}
+          />
+        ) : (
+          <IngredientGrid
+            ingredientList={ingredientList}
+            removeIngredient={removeIngredient}
+          />
+        )}
 
         {ingredientList.length === 0 && (
           <p className='mt-2 text-gray-500 dark:text-gray-400 text-sm'>

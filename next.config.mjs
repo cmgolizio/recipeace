@@ -12,6 +12,12 @@ const nextConfig = {
         port: "",
         pathname: "/images/media/drink/**",
       },
+      {
+        protocol: "https",
+        hostname: "www.thecocktaildb.com",
+        port: "",
+        pathname: "/images/ingredients/**",
+      },
     ],
   },
 };

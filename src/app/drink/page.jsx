@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import {
   collection,
-  addDoc,
   onSnapshot,
   deleteDoc,
   doc,
@@ -12,19 +11,29 @@ import {
   setDoc,
   serverTimestamp,
 } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+// import { useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
+import { TfiLayoutGrid3 } from "react-icons/tfi";
+import { PiListBold } from "react-icons/pi";
 
 import IngredientInput from "@/components/IngredientInput";
+import IngredientGrid from "@/components/IngredientGrid";
 import IngredientList from "@/components/IngredientList";
 import { db, auth } from "@/lib/firebase";
 import RecipeList from "@/components/RecipeList";
 
 export default function DrinkPage() {
-  // const [user] = useAuthState(auth);
-  // const auth = getAuth();
-  // const user = auth.currentUser;
-  const [user, loading, error] = useAuthState(auth);
+  const [user, loading] = useAuthState(auth);
   const [drinkIngredients, setDrinkIngredients] = useState([]);
+  const [ingredientViewType, setIngredientViewType] = useState("list");
+  // const router = useRouter();
+
+  // // Redirect if not logged in
+  // useEffect(() => {
+  //   if (!loading && !user) {
+  //     router.push("/login");
+  //   }
+  // }, [user, loading, router]);
 
   // Ensure user doc exists before adding anything
   const ensureUserDoc = async (uid) => {
@@ -55,6 +64,7 @@ export default function DrinkPage() {
       subcategory: ingredient.subcategory,
       abv: ingredient.abv,
       notes: ingredient.notes,
+      image_url: ingredient.image_url || null,
       addedAt: serverTimestamp(),
     });
 
@@ -90,23 +100,97 @@ export default function DrinkPage() {
     return () => unsubscribe();
   }, [user]);
 
+  // useEffect(() => {
+  //   console.log(
+  //     "Current drink ingredients (from '/drink/page.jsx'):",
+  //     drinkIngredients
+  //   );
+  // }, [drinkIngredients]);
+
+  // const handleToggleIngredientDisplay = (e) => {
+  //   e.preventDefault();
+
+  //   setIngredientViewType((prev) => (prev === "list" ? "grid" : "list"));
+  // };
+
+  /** On mount, check for stored ingredient view */
   useEffect(() => {
-    console.log(
-      "Current drink ingredients (from '/drink/page.jsx'):",
-      drinkIngredients
-    );
-  }, [drinkIngredients]);
+    const storedIngredientView = localStorage.getItem("ingredientView");
+    if (storedIngredientView) {
+      setIngredientViewType(storedIngredientView);
+      document.documentElement.setAttribute(
+        "data-ing-view",
+        storedIngredientView
+      );
+    } else {
+      setIngredientViewType("list");
+      document.documentElement.setAttribute("data-ing-view", "list");
+    }
+  }, []);
+
+  const toggleIngredientView = (e) => {
+    e.preventDefault();
+
+    const newView = ingredientViewType === "list" ? "grid" : "list";
+    setIngredientViewType(newView);
+    document.documentElement.setAttribute("data-ing-view", newView);
+    localStorage.setItem("ingredientView", newView);
+  };
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-ing-view", ingredientViewType);
+    localStorage.setItem("ingredientView", ingredientViewType);
+  }, [ingredientViewType]);
 
   return (
     <div className='min-h-screen bg-[var(--color-bg)] text-[var(--color-text)]'>
       <main className='p-4 max-w-3xl mx-auto'>
         <h2 className='text-lg font-semibold mb-2'>Your Bar Well</h2>
 
-        <IngredientInput onAdd={addIngredient} type='drink' />
-        <IngredientList
-          ingredientList={drinkIngredients}
-          removeIngredient={removeIngredient}
-        />
+        <div className='flex flex-row justify-start gap-4 items-center'>
+          <IngredientInput onAdd={addIngredient} type='drink' />
+
+          <button
+            className='p-2 rounded-full transition'
+            onClick={(e) => toggleIngredientView(e)}
+            aria-label='Toggle Ingredient Display'
+          >
+            <AnimatePresence mode='wait' initial={false}>
+              {ingredientViewType === "list" ? (
+                <motion.div
+                  key='grid'
+                  initial={{ rotate: 90, opacity: 0 }}
+                  animate={{ rotate: 0, opacity: 1 }}
+                  exit={{ rotate: -90, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <TfiLayoutGrid3 className='w-6 h-6' />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key='list'
+                  initial={{ rotate: -90, opacity: 0 }}
+                  animate={{ rotate: 0, opacity: 1 }}
+                  exit={{ rotate: 90, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <PiListBold className='w-6 h-6' />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </button>
+        </div>
+        {ingredientViewType === "list" ? (
+          <IngredientList
+            ingredientList={drinkIngredients}
+            removeIngredient={removeIngredient}
+          />
+        ) : (
+          <IngredientGrid
+            ingredientList={drinkIngredients}
+            removeIngredient={removeIngredient}
+          />
+        )}
 
         {drinkIngredients.length === 0 && (
           <p className='mt-2 text-gray-500 dark:text-gray-400 text-sm'>

@@ -1,53 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { auth } from "@/lib/firebase";
-import {
-  GoogleAuthProvider,
-  signInWithPopup,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-} from "firebase/auth";
-import { useRouter } from "next/navigation";
-import { useAuthState } from "react-firebase-hooks/auth";
+
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [user, loading] = useAuthState(auth);
-  const router = useRouter();
-
-  // Redirect if already logged in
-  useEffect(() => {
-    if (!loading && user) {
-      router.push("/");
-    }
-  }, [user, loading, router]);
-
-  const handleEmailSignIn = async () => {
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-    } catch (err) {
-      alert("Error signing in: " + err.message);
-    }
-  };
-
-  const handleEmailSignUp = async () => {
-    try {
-      await createUserWithEmailAndPassword(auth, email, password);
-    } catch (err) {
-      alert("Error signing up: " + err.message);
-    }
-  };
-
-  const handleGoogleSignIn = async () => {
-    try {
-      const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider);
-    } catch (err) {
-      alert("Error with Google login: " + err.message);
-    }
-  };
+  const [error, setError] = useState("");
+  const { loading, handleEmailSignIn, handleEmailSignUp, handleGoogleSignIn } =
+    useAuth();
 
   if (loading) {
     return (
@@ -58,16 +20,19 @@ export default function LoginPage() {
   }
 
   return (
-    <div className='flex flex-col items-center justify-center min-h-screen bg-gray-50 p-6'>
-      <h1 className='text-3xl font-bold mb-6'>Sign In / Sign Up</h1>
-
-      <div className='w-full max-w-sm bg-white p-6 rounded-lg shadow'>
+    <div className='absolute top-1/4 left-3/8 flex flex-col items-center justify-center text-center p-6'>
+      <form className='w-full max-w-sm p-6 rounded-lg'>
+        <h1 className='text-3xl font-bold mb-6'>
+          {/* <h1 className='text-3xl font-bold mb-6 text-gray-800 dark:text-gray-200'> */}
+          Sign In / Sign Up
+        </h1>
         <input
           type='email'
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder='Email'
           className='w-full border rounded p-2 mb-3'
+          // className='w-full border rounded p-2 mb-3 bg-gray-800 text-gray-200 dark:bg-gray-200 dark:text-gray-800'
         />
         <input
           type='password'
@@ -76,17 +41,18 @@ export default function LoginPage() {
           placeholder='Password'
           className='w-full border rounded p-2 mb-3'
         />
+        {error && <p className='text-red-500 text-sm'>{error}</p>}
 
         <div className='flex gap-2'>
           <button
-            onClick={handleEmailSignIn}
-            className='flex-1 bg-green-600 text-white py-2 rounded hover:bg-green-700'
+            onClick={() => handleEmailSignIn(email, password)}
+            className='flex-1 bg-blue-400 text-gray-800 py-2 rounded hover:bg-blue-300 active:bg-blue-500'
           >
             Login
           </button>
           <button
-            onClick={handleEmailSignUp}
-            className='flex-1 bg-blue-600 text-white py-2 rounded hover:bg-blue-700'
+            onClick={() => handleEmailSignUp(email, password)}
+            className='flex-1 bg-teal-300 text-gray-800 py-2 rounded hover:bg-teal-200 active:bg-teal-400'
           >
             Sign Up
           </button>
@@ -94,11 +60,11 @@ export default function LoginPage() {
 
         <button
           onClick={handleGoogleSignIn}
-          className='w-full mt-4 bg-red-500 text-white py-2 rounded hover:bg-red-600'
+          className='min-w-full mt-2 bg-orange-500 text-gray-800 py-2 rounded hover:bg-orange-400 active:bg-orange-600'
         >
           Continue with Google
         </button>
-      </div>
+      </form>
     </div>
   );
 }

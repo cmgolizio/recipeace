@@ -17,20 +17,19 @@ export default function Navbar() {
   const closeAll = () => setOpenMenu(null);
 
   return (
-    <nav className='max-h-13 bg-gray-100 dark:bg-gray-600 border-b px-4 py-2 flex items-center justify-between'>
+    <nav className='max-h-13 bg-gray-500 px-4 py-2 flex items-center justify-between'>
+      {/* <nav className='max-h-13 bg-gray-100 dark:bg-gray-600 border-b px-4 py-2 flex items-center justify-between'> */}
       {/* Left side (logo + menus) */}
-      <div className='flex items-center space-x-6 bg-gray-100 dark:bg-gray-600'>
-        <Link
-          href='/'
-          className='text-lg font-bold text-gray-800 dark:text-gray-100'
-        >
+      <div className='flex items-center text-center space-x-6  bg-gray-500'>
+        {/* <div className='flex items-center space-x-6 bg-gray-100 dark:bg-gray-600'> */}
+        <Link href='/' className='text-2xl font-bold text-gray-200'>
           ReciPeace
         </Link>
 
         <Dropdown
           label='Food'
           items={[
-            { label: "Pantry Items", href: "/food" },
+            { label: "Pantry", href: "/food" },
             { label: "Saved", href: "/food/favorites" },
           ]}
           isOpen={openMenu === "food"}
@@ -41,7 +40,7 @@ export default function Navbar() {
         <Dropdown
           label='Drink'
           items={[
-            { label: "Bar Inventory", href: "/drink" },
+            { label: "Bar", href: "/drink" },
             { label: "Saved", href: "/drink/favorites" },
           ]}
           isOpen={openMenu === "drink"}

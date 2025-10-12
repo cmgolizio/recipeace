@@ -3,8 +3,6 @@ import { db } from "@/lib/firebase";
 
 /**
  * Check if a recipe is favorited.
- * favorites: array of objects from Firestore snapshot mapping.
- * id: recipe id (string or number)
  */
 export function isFavorited(favorites = [], id) {
   if (!favorites || !favorites.length) return false;
@@ -18,13 +16,6 @@ export function isFavorited(favorites = [], id) {
 
 /**
  * Toggle favorite for a recipe.
- * - Saves the recipe object to collection: users/{uid}/{type}Favorites/{recipeId}
- * - Removes it if already favorited.
- *
- * user: firebase user object
- * favorites: current favorites array from state
- * recipe: recipe object (should include .id)
- * type: 'food' | 'drink'
  */
 export async function toggleFavorite(user, favorites = [], recipe = {}, type) {
   if (!user || !user.uid) {

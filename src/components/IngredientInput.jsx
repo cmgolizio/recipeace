@@ -156,7 +156,7 @@ export default function IngredientInput({ onAdd, type, setAddedMessage }) {
       )}
 
       {loading && (
-        <div className='absolute left-0 top-full ml-1.5 py-1.5 rounded-md shadow-lg h-fit overflow-y-auto bg-transparent text-violet-600 text-xl'>
+        <div className='absolute left-0 top-full ml-1.5 py-1.5 px-2.5 rounded-md shadow-lg h-fit overflow-y-auto bg-[rgba(255,255,255,0.3)] backdrop-blur-[10px] text-violet-300 text-lg'>
           <p className='animate-pulse'>
             {type === "food"
               ? "Loading suggestions..."

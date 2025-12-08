@@ -20,6 +20,15 @@ const nextConfig = {
       },
     ],
   },
+  experimental: {
+    turbo: {
+      rules: {},
+    },
+  },
+  // force webpack instead of Turbopack
+  webpack: (config) => {
+    return config;
+  },
 };
 
 export default nextConfig;

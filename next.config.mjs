@@ -21,9 +21,7 @@ const nextConfig = {
     ],
   },
   experimental: {
-    turbo: {
-      rules: {},
-    },
+    turbo: false,
   },
   // force webpack instead of Turbopack
   webpack: (config) => {

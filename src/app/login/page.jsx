@@ -19,6 +19,38 @@ export default function LoginPage() {
     );
   }
 
+  const handleLogin = async (event) => {
+    event.preventDefault();
+    setError("");
+    try {
+      await handleEmailSignIn(email, password);
+    } catch (err) {
+      setError(err?.message || "Unable to sign in. Please try again.");
+    }
+  };
+
+  const handleSignUp = async (event) => {
+    event.preventDefault();
+    setError("");
+    try {
+      await handleEmailSignUp(email, password);
+    } catch (err) {
+      setError(err?.message || "Unable to sign up. Please try again.");
+    }
+  };
+
+  const handleGoogleSignInClick = async (event) => {
+    event.preventDefault();
+    setError("");
+    try {
+      await handleGoogleSignIn();
+    } catch (err) {
+      setError(
+        err?.message || "Unable to sign in with Google. Please try again."
+      );
+    }
+  };
+
   return (
     <div className='absolute top-1/4 left-3/8 flex flex-col items-center justify-center text-center p-6'>
       <form className='w-full max-w-sm p-6 rounded-lg'>
@@ -45,13 +77,15 @@ export default function LoginPage() {
 
         <div className='flex gap-2'>
           <button
-            onClick={() => handleEmailSignIn(email, password)}
+            type='button'
+            onClick={handleLogin}
             className='flex-1 bg-blue-400 text-gray-800 py-2 rounded hover:bg-blue-300 active:bg-blue-500'
           >
             Login
           </button>
           <button
-            onClick={() => handleEmailSignUp(email, password)}
+            type='button'
+            onClick={handleSignUp}
             className='flex-1 bg-teal-300 text-gray-800 py-2 rounded hover:bg-teal-200 active:bg-teal-400'
           >
             Sign Up
@@ -59,7 +93,8 @@ export default function LoginPage() {
         </div>
 
         <button
-          onClick={handleGoogleSignIn}
+          type='button'
+          onClick={handleGoogleSignInClick}
           className='min-w-full mt-2 bg-orange-500 text-gray-800 py-2 rounded hover:bg-orange-400 active:bg-orange-600'
         >
           Continue with Google

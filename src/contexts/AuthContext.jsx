@@ -45,7 +45,8 @@ export const AuthProvider = ({ children }) => {
     }
   }, [user, loading]);
 
-  const handleEmailSignIn = async () => {
+  const handleEmailSignIn = async (email, password) => {
+    setLoading(true);
     try {
       const UserCredentials = await signInWithEmailAndPassword(
         auth,
@@ -56,12 +57,15 @@ export const AuthProvider = ({ children }) => {
       router.replace("/");
       return UserCredentials.user;
     } catch (err) {
-      console.error("Sign-in error:", error);
-      throw error;
+      console.error("Sign-in error:", err);
+      throw err;
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleEmailSignUp = async () => {
+  const handleEmailSignUp = async (email, password) => {
+    setLoading(true);
     try {
       const UserCredentials = await createUserWithEmailAndPassword(
         auth,
@@ -72,19 +76,18 @@ export const AuthProvider = ({ children }) => {
       router.replace("/");
       return UserCredentials.user;
     } catch (err) {
-      console.error("Sign-up error:", error);
-      throw error;
+      console.error("Sign-up error:", err);
+      throw err;
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleGoogleSignIn = async () => {
+    setLoading(true);
     try {
       const provider = new GoogleAuthProvider();
-      await setPersistence(
-        auth,
-        browserLocalPersistence,
-        browserPopupRedirectResolver
-      );
+      await setPersistence(auth, browserLocalPersistence);
       const result = await signInWithPopup(auth, provider);
       setUser(result.user);
       return result.user;

@@ -1,0 +1,97 @@
+[
+  {
+    "id": "margherita-pasta",
+    "title": "Margherita Pasta",
+    "image": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80",
+    "ingredients": [
+      "pasta_spaghetti",
+      "tomato",
+      "garlic",
+      "olive_oil",
+      "basil_fresh",
+      "parmesan"
+    ],
+    "steps": [
+      "Cook spaghetti in salted water until al dente.",
+      "Sauté minced garlic in olive oil until fragrant, then add chopped tomatoes.",
+      "Toss the cooked pasta with the tomato mixture and finish with basil and parmesan."
+    ],
+    "source": "internal",
+    "summary": "A bright, basil-forward spaghetti that keeps the pantry core intact."
+  },
+  {
+    "id": "garlic-parmesan-chicken",
+    "title": "Garlic Parmesan Chicken",
+    "image": "https://images.unsplash.com/photo-1481931098730-318b6f776db0?auto=format&fit=crop&w=800&q=80",
+    "ingredients": [
+      "chicken_breast",
+      "garlic",
+      "olive_oil",
+      "parmesan",
+      "basil_fresh"
+    ],
+    "steps": [
+      "Pound chicken breasts to even thickness and season with salt and pepper.",
+      "Sear in olive oil until golden, then add garlic and cook until aromatic.",
+      "Finish with parmesan and fresh basil before serving."
+    ],
+    "source": "internal",
+    "summary": "Pan-seared chicken layered with garlic and a fast parmesan finish."
+  },
+  {
+    "id": "roasted-pepper-spaghetti",
+    "title": "Roasted Pepper Spaghetti",
+    "image": "https://images.unsplash.com/photo-1604908177525-4025a4a3d5a4?auto=format&fit=crop&w=800&q=80",
+    "ingredients": [
+      "pasta_spaghetti",
+      "bell_pepper_red",
+      "garlic",
+      "olive_oil",
+      "parmesan"
+    ],
+    "steps": [
+      "Roast sliced red peppers until tender and lightly charred.",
+      "Blend peppers with garlic and olive oil to make a quick sauce.",
+      "Toss with spaghetti and finish with grated parmesan."
+    ],
+    "source": "internal",
+    "summary": "Smoky roasted peppers add depth to a simple spaghetti base."
+  },
+  {
+    "id": "tomato-basil-bruschetta",
+    "title": "Tomato Basil Bruschetta",
+    "image": "https://images.unsplash.com/photo-1528715471579-d1bcf0ba5e83?auto=format&fit=crop&w=800&q=80",
+    "ingredients": [
+      "tomato",
+      "garlic",
+      "olive_oil",
+      "basil_fresh",
+      "onion_yellow"
+    ],
+    "steps": [
+      "Dice tomatoes and onion, then toss with minced garlic and olive oil.",
+      "Season with salt and fold in fresh basil before serving on toasted bread."
+    ],
+    "source": "internal",
+    "summary": "A no-fuss tomato starter built entirely from pantry staples."
+  },
+  {
+    "id": "mushroom-parmesan-pasta",
+    "title": "Mushroom Parmesan Pasta",
+    "image": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80",
+    "ingredients": [
+      "pasta_spaghetti",
+      "mushroom_cremini",
+      "garlic",
+      "olive_oil",
+      "parmesan"
+    ],
+    "steps": [
+      "Sauté sliced mushrooms in olive oil until browned.",
+      "Add garlic and cook briefly before tossing with cooked pasta.",
+      "Finish with parmesan and cracked pepper."
+    ],
+    "source": "internal",
+    "summary": "Earthy cremini mushrooms give this weeknight pasta extra depth."
+  }
+]

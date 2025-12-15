@@ -1,43 +1,15 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import axios from "axios";
+import { useState, useEffect } from "react";
 
-import { addDrinkIngredient } from "@/helpers/addDrinkIngredient";
 import { auth } from "@/lib/firebase";
 
 export default function IngredientInput({ onAdd, type, setAddedMessage }) {
   const [input, setInput] = useState("");
-  const [suggestions, setSuggestions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
-  const timerRef = useRef(null);
-
-  // Fetch autocomplete suggestions from Spoonacular (food only)
-  async function fetchSuggestions(value) {
-    setInput(value);
-    if (!value) {
-      setSuggestions([]);
-      return;
-    }
-
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await axios.get("/api/spoonacular/autocomplete", {
-        params: { query: value },
-      });
-      setSuggestions(res.data || []);
-      setHighlightedIndex(-1);
-    } catch (err) {
-      console.error("Error fetching autocomplete:", err);
-      setError("Failed to fetch suggestions. Try again later.");
-      setSuggestions([]);
-    } finally {
-      setLoading(false);
-    }
-  }
+  const [normalizedSuggestions, setNormalizedSuggestions] = useState([]);
 
   // validate drink input with Supabase "Drank" database, before adding to Firestore
   const validateIngredient = async (e) => {
@@ -81,25 +53,65 @@ export default function IngredientInput({ onAdd, type, setAddedMessage }) {
     }
   };
 
-  // Debounce input for food
+  // Lightweight local suggestions to remove network dependency on typing speed
   useEffect(() => {
-    if (type === "drink") return;
-    if (timerRef.current) clearTimeout(timerRef.current);
-    timerRef.current = setTimeout(() => fetchSuggestions(input), 500);
+    if (type !== "food") return;
+    if (!input) {
+      setNormalizedSuggestions([]);
+      return;
+    }
 
-    return () => clearTimeout(timerRef.current);
+    const lowered = input.toLowerCase();
+    const matches = [
+      "tomato",
+      "onion",
+      "garlic",
+      "chicken",
+      "olive oil",
+      "pasta",
+      "basil",
+      "parmesan",
+      "ground beef",
+      "carrot",
+      "celery",
+      "potato",
+      "bell pepper",
+    ].filter((name) => name.includes(lowered));
+    setNormalizedSuggestions(matches);
   }, [input, type]);
 
   // Handle adding item to pantry
-  const handleAdd = (itemName) => {
+  const handleAdd = async (itemName) => {
     if (!itemName || !onAdd) return;
+    setLoading(true);
+    setError(null);
 
-    onAdd(itemName);
-    setInput("");
-    setSuggestions([]);
-    if (setAddedMessage) {
-      setAddedMessage(`"${itemName}" added!`);
-      setTimeout(() => setAddedMessage(""), 2000);
+    try {
+      const res = await fetch("/api/ingredients/normalize", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ input: itemName }),
+      });
+
+      const data = await res.json();
+      if (!res.ok)
+        throw new Error(data.error || "Unable to normalize ingredient");
+
+      const normalized = data.normalizedIngredients?.[0];
+      if (!normalized) throw new Error("No recognizable ingredient");
+
+      await onAdd(normalized);
+      setInput("");
+      setNormalizedSuggestions([]);
+      if (setAddedMessage) {
+        setAddedMessage(`"${normalized.canonicalName}" added!`);
+        setTimeout(() => setAddedMessage(""), 2000);
+      }
+    } catch (err) {
+      console.error(err);
+      setError(err.message || "Unable to add ingredient");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -107,21 +119,7 @@ export default function IngredientInput({ onAdd, type, setAddedMessage }) {
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      if (highlightedIndex >= 0 && highlightedIndex < suggestions.length) {
-        handleAdd(suggestions[highlightedIndex].name);
-      } else {
-        type === "drink" ? validateIngredient(e) : handleAdd(input);
-      }
-    } else if (e.key === "ArrowDown") {
-      e.preventDefault();
-      setHighlightedIndex((prev) =>
-        prev < suggestions.length - 1 ? prev + 1 : 0
-      );
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault();
-      setHighlightedIndex((prev) =>
-        prev > 0 ? prev - 1 : suggestions.length - 1
-      );
+      type === "drink" ? validateIngredient(e) : handleAdd(input);
     }
   };
 
@@ -171,19 +169,15 @@ export default function IngredientInput({ onAdd, type, setAddedMessage }) {
         </p>
       )}
 
-      {!loading && suggestions.length > 0 && (
+      {!loading && normalizedSuggestions.length > 0 && (
         <ul className='absolute z-10 top-full left-0 w-full mt-1 border rounded-md shadow-lg h-fit overflow-y-auto bg-gray-50 text-gray-800 dark:bg-gray-700 dark:text-gray-200'>
-          {suggestions.map((suggestion, index) => (
+          {normalizedSuggestions.map((suggestion, index) => (
             <li
-              key={suggestion.id || `suggestion-${index}`}
-              onClick={() => handleAdd(suggestion.name)}
-              className={`px-3 py-2 cursor-pointer ${
-                highlightedIndex === index
-                  ? "bg-blue-100"
-                  : "hover:bg-gray-100 hover:dark:bg-gray-600 hover:text-gray-900 hover:dark:text-gray-100"
-              }`}
+              key={`suggestion-${index}`}
+              onClick={() => handleAdd(suggestion)}
+              className={`px-3 py-2 cursor-pointer hover:bg-gray-100 hover:dark:bg-gray-600 hover:text-gray-900 hover:dark:text-gray-100`}
             >
-              {suggestion.name}
+              {suggestion}
             </li>
           ))}
         </ul>

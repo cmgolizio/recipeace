@@ -35,7 +35,18 @@ export default function RecipeCard({
       {type === "food" && (
         <>
           <p className='text-sm text-gray-600'>
-            ✅ Uses {recipe.usedIngredientCount ?? 0} pantry items
+            ✅ Uses{" "}
+            {recipe.matchedIngredientCount ??
+              recipe.matchedIngredients?.length ??
+              0}{" "}
+            pantry items
+          </p>
+          <p className='text-sm text-gray-600'>
+            ❌ Missing{" "}
+            {recipe.missingIngredientCount ??
+              recipe.missingIngredients?.length ??
+              0}{" "}
+            items
           </p>
           <span
             className={`cursor-pointer ${
@@ -45,7 +56,7 @@ export default function RecipeCard({
             onMouseLeave={handleMouseLeave}
           >
             <p className='text-sm text-gray-600'>
-              ❌ Missing {recipe.missedIngredientCount ?? 0} items
+              View missing items & substitutions
             </p>
           </span>
           {tooltipVisible && (
@@ -61,6 +72,21 @@ export default function RecipeCard({
                   </li>
                 )}
               </ul>
+              {recipe?.substitutions?.length > 0 && (
+                <div className='mt-2 pt-2 border-t text-left'>
+                  <p className='font-semibold text-xs uppercase text-gray-500'>
+                    Substitutions
+                  </p>
+                  <ul className='mt-1 space-y-1'>
+                    {recipe.substitutions.map((sub, idx) => (
+                      <li key={`${recipe.id}-sub-${idx}`}>
+                        Swap {sub.missingName} ➜ {sub.suggestedName}
+                        {sub.note ? ` (${sub.note})` : ""}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           )}
         </>

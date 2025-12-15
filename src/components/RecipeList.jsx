@@ -15,6 +15,8 @@ export default function RecipeList({ ingredientList, type }) {
   const [user] = useAuthState(auth);
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [nearMatches, setNearMatches] = useState([]);
+  const [normalizedIngredients, setNormalizedIngredients] = useState([]);
   const [strict, setStrict] = useState(false);
   const [error, setError] = useState(null);
   const [favorites, setFavorites] = useState([]);
@@ -31,8 +33,14 @@ export default function RecipeList({ ingredientList, type }) {
 
     try {
       if (type === "food") {
-        const recipes = await handleFindRecipes(ingredientList, strict);
-        recipes !== null ? setRecipes(recipes) : setRecipes([]);
+        const response = await handleFindRecipes(ingredientList, strict);
+        if (response !== null) {
+          setRecipes(response.recipes || []);
+          setNearMatches(response.nearMatches || []);
+          setNormalizedIngredients(response.normalizedIngredients || []);
+        } else {
+          setRecipes([]);
+        }
       } else if (type === "drink") {
         const cocktails = await handleFindCocktails(ingredientList);
         cocktails !== null ? setRecipes(cocktails) : setRecipes([]);
@@ -91,6 +99,22 @@ export default function RecipeList({ ingredientList, type }) {
 
       {error && (
         <p className='mt-4 text-red-500 text-sm font-medium'>{error}</p>
+      )}
+
+      {!loading && normalizedIngredients.length > 0 && type === "food" && (
+        <div className='mt-4 text-sm text-gray-600 dark:text-gray-300'>
+          <p className='font-semibold'>Normalized pantry</p>
+          <div className='flex flex-wrap gap-2 mt-1'>
+            {normalizedIngredients.map((ing) => (
+              <span
+                key={ing.canonicalId}
+                className='px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded-full'
+              >
+                {ing.canonicalName}
+              </span>
+            ))}
+          </div>
+        </div>
       )}
 
       {loading && <LoadingSkeleton type={"recipe"} />}

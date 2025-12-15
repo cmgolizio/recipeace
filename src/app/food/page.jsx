@@ -36,9 +36,9 @@ export default function FoodPage() {
     }
   };
 
-  // Add an ingredient (flattened path: users/{uid}/foodIngredients)
-  const addIngredient = async (itemName) => {
-    if (!user || !itemName) return;
+  // // Add an ingredient (flattened path: users/{uid}/foodIngredients)
+  const addIngredient = async (normalizedIngredient) => {
+    if (!user || !normalizedIngredient) return;
 
     try {
       await ensureUserDoc(user.uid);
@@ -49,8 +49,12 @@ export default function FoodPage() {
         user.uid,
         "foodIngredients"
       );
-      await addDoc(ingredientsRef, { name: itemName });
-      console.log("Added ingredient:", itemName);
+      await addDoc(ingredientsRef, {
+        canonicalId: normalizedIngredient.canonicalId,
+        canonicalName: normalizedIngredient.canonicalName,
+        rawInput: normalizedIngredient.rawInput,
+      });
+      console.log("Added ingredient:", normalizedIngredient.canonicalName);
     } catch (err) {
       console.error("Error adding ingredient:", err);
     }
@@ -105,7 +109,9 @@ export default function FoodPage() {
     const unsubscribe = onSnapshot(ingredientsRef, (snapshot) => {
       const items = snapshot.docs.map((doc) => ({
         id: doc.id,
-        name: doc.data().name,
+        name: doc.data().canonicalName || doc.data().name,
+        canonicalId: doc.data().canonicalId,
+        rawInput: doc.data().rawInput,
       }));
       setIngredientList(items);
     });
@@ -167,10 +173,7 @@ export default function FoodPage() {
           </p>
         )}
 
-        <RecipeList
-          ingredientList={ingredientList.map((item) => item.name)}
-          type='food'
-        />
+        <RecipeList ingredientList={ingredientList} type='food' />
       </main>
     </div>
   );

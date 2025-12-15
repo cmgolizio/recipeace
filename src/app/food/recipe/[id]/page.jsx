@@ -31,7 +31,8 @@ export default function FoodRecipeDetailPage() {
   useEffect(() => {
     const fetchRecipe = async () => {
       try {
-        const res = await axios.get(`/api/spoonacular/recipe/${id}`);
+        // const res = await axios.get(`/api/spoonacular/recipe/${id}`);
+        const res = await axios.get(`/api/recipes/${id}`);
         setRecipe(res.data);
       } catch (err) {
         console.error("Error fetching recipe:", err);
@@ -72,12 +73,13 @@ export default function FoodRecipeDetailPage() {
         recipeId: id,
         title: recipe.title,
         image: recipe.image,
-        sourceUrl: recipe.sourceUrl,
-        servings: recipe.servings,
-        readyInMinutes: recipe.readyInMinutes,
-        preparationMinutes: recipe.preparationMinutes,
-        cookingMinutes: recipe.cookingMinutes,
-        pricePerServing: recipe.pricePerServing,
+        sourceUrl: recipe.source,
+        // sourceUrl: recipe.sourceUrl,
+        // servings: recipe.servings,
+        // readyInMinutes: recipe.readyInMinutes,
+        // preparationMinutes: recipe.preparationMinutes,
+        // cookingMinutes: recipe.cookingMinutes,
+        // pricePerServing: recipe.pricePerServing,
       });
       setIsFavorite(true);
       setFavDocId(docRef.id);
@@ -136,18 +138,19 @@ export default function FoodRecipeDetailPage() {
         </div>
 
         <ul className='list-disc pl-6 space-y-1'>
-          {recipe.extendedIngredients?.map((ing, i) => (
-            <li key={i}>{ing.original}</li>
+          {recipe.ingredients?.map((ing) => (
+            <li key={ing.id}>{ing.name}</li>
           ))}
         </ul>
 
         <div>
           <h2 className='text-lg font-semibold mb-2'>Instructions</h2>
-          {recipe.instructions ? (
-            <div
-              className='prose dark:prose-invert max-w-none'
-              dangerouslySetInnerHTML={{ __html: recipe.instructions }}
-            />
+          {recipe.steps?.length ? (
+            <ol className='list-decimal pl-6 space-y-2 text-left'>
+              {recipe.steps.map((step, idx) => (
+                <li key={`${recipe.id}-step-${idx}`}>{step}</li>
+              ))}
+            </ol>
           ) : (
             <p>No instructions available.</p>
           )}

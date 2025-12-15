@@ -1,0 +1,98 @@
+[
+  {
+    "id": "tomato",
+    "name": "Tomato",
+    "category": "produce",
+    "aliases": ["tomatoes", "roma tomato", "cherry tomato"]
+  },
+  {
+    "id": "onion_yellow",
+    "name": "Yellow Onion",
+    "category": "produce",
+    "aliases": ["onion", "yellow onions"]
+  },
+  {
+    "id": "garlic",
+    "name": "Garlic",
+    "category": "produce",
+    "aliases": ["garlic clove", "garlic cloves"]
+  },
+  {
+    "id": "chicken_breast",
+    "name": "Chicken Breast",
+    "category": "protein",
+    "aliases": ["boneless chicken", "chicken breasts"]
+  },
+  {
+    "id": "olive_oil",
+    "name": "Olive Oil",
+    "category": "pantry",
+    "aliases": ["extra virgin olive oil", "evoo"]
+  },
+  {
+    "id": "pasta_spaghetti",
+    "name": "Spaghetti",
+    "category": "pantry",
+    "aliases": ["pasta", "spaghetti noodles"]
+  },
+  {
+    "id": "basil_fresh",
+    "name": "Fresh Basil",
+    "category": "herb",
+    "aliases": ["basil leaves", "basil"]
+  },
+  {
+    "id": "mozzarella",
+    "name": "Mozzarella",
+    "category": "dairy",
+    "aliases": ["mozzarella cheese", "fresh mozzarella"]
+  },
+  {
+    "id": "parmesan",
+    "name": "Parmesan",
+    "category": "dairy",
+    "aliases": ["parmigiano reggiano", "parmesan cheese"]
+  },
+  {
+    "id": "bell_pepper_red",
+    "name": "Red Bell Pepper",
+    "category": "produce",
+    "aliases": ["red pepper", "bell pepper"]
+  },
+  {
+    "id": "mushroom_cremini",
+    "name": "Cremini Mushroom",
+    "category": "produce",
+    "aliases": ["baby bella", "cremini mushrooms", "mushrooms"]
+  },
+  {
+    "id": "ground_beef",
+    "name": "Ground Beef",
+    "category": "protein",
+    "aliases": ["minced beef", "beef mince", "hamburger meat"]
+  },
+  {
+    "id": "carrot",
+    "name": "Carrot",
+    "category": "produce",
+    "aliases": ["carrots", "baby carrot", "baby carrots"]
+  },
+  {
+    "id": "celery",
+    "name": "Celery",
+    "category": "produce",
+    "aliases": ["celery stalk", "celery stalks"]
+  },
+  {
+    "id": "potato",
+    "name": "Potato",
+    "category": "produce",
+    "aliases": ["potatoes", "russet potato", "yellow potato"]
+  },
+  {
+    "id": "bell_pepper_green",
+    "name": "Green Bell Pepper",
+    "category": "produce",
+    "aliases": ["green pepper", "bell pepper"]
+  }
+]

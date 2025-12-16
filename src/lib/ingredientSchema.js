@@ -14,8 +14,11 @@ export const normalizedIngredientSchema = z.object({
   rawInput: z.string().min(1),
 });
 
+// export const normalizedIngredientResponseSchema = z.object({
+//   normalizedIngredients: z.array(normalizedIngredientSchema),
+// });
 export const normalizedIngredientResponseSchema = z.object({
-  normalizedIngredients: z.array(normalizedIngredientSchema),
+  normalizedIngredients: z.array(z.string()).default([]),
 });
 
 export const rankedRecipeSchema = z.object({

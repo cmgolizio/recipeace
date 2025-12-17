@@ -1,11 +1,15 @@
 import { NextResponse } from "next/server";
-import {
-  normalizedIngredientResponseSchema,
-  resolveCanonicalId,
-  ensureCanonicalIngredient,
-} from "../../../../lib/ingredientSchema";
-
+import { normalizedIngredientResponseSchema } from "../../../../lib/ingredientSchema";
 import { normalizeIngredients } from "../../../../lib/llm";
+
+function slugifyId(value) {
+  return String(value || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "_")
+    .replace(/_{2,}/g, "_")
+    .replace(/^_|_$/g, "")
+    .trim();
+}
 
 export async function POST(req) {
   try {
@@ -23,71 +27,32 @@ export async function POST(req) {
 
     const rawInput = String(input).trim();
 
-    // ----------------------------------
-    // 1. BEST-EFFORT NORMALIZATION (LLM)
-    // ----------------------------------
-    let normalizedNames = [];
+    let normalized = [];
 
     try {
       const llmResult = await normalizeIngredients(rawInput);
-
       const parsed = normalizedIngredientResponseSchema.safeParse(llmResult);
 
-      if (parsed.success && parsed.data.normalizedIngredients.length) {
-        normalizedNames = parsed.data.normalizedIngredients;
-      } else {
-        console.warn(
-          "LLM returned invalid or empty normalization, falling back"
-        );
+      if (parsed.success) {
+        normalized = parsed.data.normalizedIngredients;
       }
     } catch (err) {
       console.warn("LLM normalization failed, falling back:", err);
     }
 
-    // Fallback: use raw input
-    if (!normalizedNames.length) {
-      normalizedNames = [rawInput];
+    if (!normalized.length) {
+      normalized = [
+        {
+          canonicalId: slugifyId(rawInput),
+          canonicalName: rawInput,
+          category: "other",
+          rawInput,
+        },
+      ];
     }
 
-    // ----------------------------------
-    // 2. CANONICAL RESOLUTION (LOCAL)
-    // ----------------------------------
-    const resolved = normalizedNames
-      .map((name) => {
-        const canonicalId = resolveCanonicalId(name);
-        if (!canonicalId) return null;
-
-        const canonical = ensureCanonicalIngredient(canonicalId);
-        if (!canonical) return null;
-
-        return {
-          canonicalId: canonical.id,
-          canonicalName: canonical.name,
-          rawInput: name,
-        };
-      })
-      .filter(Boolean);
-
-    // Final fallback if nothing resolved
-    if (!resolved.length) {
-      const fallbackId = resolveCanonicalId(rawInput);
-      if (fallbackId) {
-        const canonical = ensureCanonicalIngredient(fallbackId);
-        if (canonical) {
-          resolved.push({
-            canonicalId: canonical.id,
-            canonicalName: canonical.name,
-            rawInput,
-          });
-        }
-      }
-    }
-
-    // ----------------------------------
-    // 3. GUARANTEED SAFE RESPONSE
-    // ----------------------------------
     return NextResponse.json({
-      normalizedIngredients: resolved,
+      normalizedIngredients: normalized,
     });
   } catch (err) {
     console.error("normalize ingredients error", err);

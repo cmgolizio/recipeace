@@ -6,10 +6,10 @@ import {
   attachSubstitutions,
 } from "@/lib/llm";
 import {
-  findRecipesForIngredientSet,
-  ingredientNameForId,
-} from "@/lib/recipeStore";
-import { normalizedIngredientResponseSchema } from "@/lib/ingredientSchema";
+  canonicalIngredientMap,
+  normalizedIngredientResponseSchema,
+} from "@/lib/ingredientSchema";
+import { findRecipesForIngredients } from "@/lib/recipeService";
 
 export async function POST(req) {
   try {
@@ -40,25 +40,30 @@ export async function POST(req) {
       );
     }
 
-    const canonicalIds = validatedNormalized.normalizedIngredients.map(
-      (ing) => ing.canonicalId
-    );
+    const ingredientNameResolver = (id) => {
+      const normalizedMatch = validatedNormalized.normalizedIngredients.find(
+        (ing) => ing.canonicalId === id
+      );
+      if (normalizedMatch) return normalizedMatch.canonicalName;
+      return canonicalIngredientMap.get(id)?.name || id;
+    };
 
-    const { exactMatches, nearMatches } = findRecipesForIngredientSet(
-      canonicalIds,
-      {
-        strict,
-      }
-    );
+    const { recipes: exactMatches, nearMatches } =
+      await findRecipesForIngredients(
+        validatedNormalized.normalizedIngredients,
+        {
+          strict,
+        }
+      );
 
     const mapMissing = (recipeList) =>
       recipeList.map((recipe) => ({
         ...recipe,
         missingIngredients: recipe.missingIngredientIds.map((id) =>
-          ingredientNameForId(id)
+          ingredientNameResolver(id)
         ),
         matchedIngredientNames: recipe.matchedIngredients.map((id) =>
-          ingredientNameForId(id)
+          ingredientNameResolver(id)
         ),
       }));
 
@@ -73,7 +78,11 @@ export async function POST(req) {
       : null;
 
     const mergedExact = mergeRanking(shapedExact, ranked);
-    const enrichedExact = attachSubstitutions(mergedExact, ranked);
+    const enrichedExact = attachSubstitutions(
+      mergedExact,
+      ranked,
+      ingredientNameResolver
+    );
 
     return NextResponse.json(
       {

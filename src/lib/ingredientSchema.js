@@ -11,14 +11,12 @@ export const canonicalIngredientSchema = z.object({
 export const normalizedIngredientSchema = z.object({
   canonicalId: z.string().min(1),
   canonicalName: z.string().min(1),
+  category: z.string().optional(),
   rawInput: z.string().min(1),
 });
 
-// export const normalizedIngredientResponseSchema = z.object({
-//   normalizedIngredients: z.array(normalizedIngredientSchema),
-// });
 export const normalizedIngredientResponseSchema = z.object({
-  normalizedIngredients: z.array(z.string()).default([]),
+  normalizedIngredients: z.array(normalizedIngredientSchema),
 });
 
 export const rankedRecipeSchema = z.object({

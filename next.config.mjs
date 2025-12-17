@@ -4,6 +4,35 @@
 // export default nextConfig;
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  async redirects() {
+    return [
+      {
+        source: "/",
+        destination: "/under-construction",
+        permanent: true,
+      },
+      {
+        source: "/food",
+        destination: "/under-construction",
+        permanent: true,
+      },
+      {
+        source: "/drink",
+        destination: "/under-construction",
+        permanent: true,
+      },
+      {
+        source: "/login",
+        destination: "/under-construction",
+        permanent: true,
+      },
+      {
+        source: "/signup",
+        destination: "/under-construction",
+        permanent: true,
+      },
+    ];
+  },
   images: {
     remotePatterns: [
       {

@@ -14,7 +14,7 @@ export default function UnderConstructionPage() {
           Under Construction
         </div>
 
-        <div className='absolute bottom-4 left-1/2 -translate-x-1/2 text-center text-lg font-semibold text-[#e6edf7] drop-shadow-[0_2px_6px_rgba(0,0,0,0.4)] z-40'>
+        <div className='w-full absolute bottom-10 left-1/2 -translate-x-1/2 text-center text-md font-semibold text-[#dfe0e3] drop-shadow-[0_2px_6px_rgba(0,0,0,0.4)] z-40'>
           Cool things are being built, be sure to check back soon!
         </div>
 
@@ -60,18 +60,18 @@ export default function UnderConstructionPage() {
             </div>
           </div>
 
-          <div className='excavator'>
+          <div className='excavator z-30'>
             <div className='excavator-body'>
-              {/* <div className='cab' /> */}
+              <div className='cab' />
               <div className='tracks'>
                 <div className='track' />
                 <div className='track track-2' />
               </div>
-              {/* <div className='boom'>
+              <div className='boom'>
                 <div className='stick'>
                   <div className='bucket' />
                 </div>
-              </div> */}
+              </div>
             </div>
           </div>
 
@@ -87,7 +87,7 @@ export default function UnderConstructionPage() {
             <div className='wheel wheel-front' />
           </div>
 
-          <div className='ground'>
+          <div className='ground z-10'>
             <div className='striping striping-1' />
             <div className='striping striping-2' />
             <div className='striping striping-3' />
@@ -470,7 +470,7 @@ export default function UnderConstructionPage() {
 
         .truck {
           position: absolute;
-          bottom: 82px;
+          bottom: 65px;
           left: 520px;
           width: 180px;
           height: 70px;
@@ -544,9 +544,9 @@ export default function UnderConstructionPage() {
 
         .ground {
           position: absolute;
-          bottom: 40px;
+          bottom: 0px;
           left: -20px;
-          width: calc(100% + 40px);
+          width: calc(100% + 20px);
           height: 90px;
           background: linear-gradient(180deg, #0f1421 0%, #080b12 100%);
           box-shadow: inset 0 12px 20px rgba(255, 255, 255, 0.02);
